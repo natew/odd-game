@@ -5,11 +5,15 @@ var clock = new THREE.Clock();
 
 var collidableMeshList = [];
 var cars = [],
-    activeCar = 0;
+    activeCar = 0,
+    shells = [],
+    numShells = 0;
 
 var darkMaterial = new THREE.MeshBasicMaterial( { color: 0xffffcc } );
 var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } );
 var multiMaterial = [ darkMaterial, wireframeMaterial ];
+
+var SHELL_SPEED = 10;
 
 init();
 animate();
@@ -100,22 +104,6 @@ function renderCars() {
   }
 }
 
-function loadObjects() {
-  // var loader = new THREE.ObjectLoader;
-  // loader.load( "models/car.json", function ( geometry, materials ) {
-  //   var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000 } ) );
-  //   scene.add( mesh );
-  // });
-
-  // var loader = new THREE.ColladaLoader();
-  // loader.load('models/civic-red.dae', function (result) {
-  //   result.scene.dynamic = true;
-  //   result.scene.verticesNeedUpdate = true;
-  //   result.scene.normalsNeedUpdate = true;
-  //   scene.add(result.scene);
-  // });
-}
-
 function lighting() {
   // Point light
   var pointLight = new THREE.PointLight(0xFFFFFF);
@@ -135,17 +123,16 @@ function moveBackward(car, moveDistance) {
 
 function shoot() {
   var car = cars[activeCar];
-
-  var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360,
-      dist = 10,
-      x = dist * Math.sin(degree),
-      y = dist * Math.cos(degree);
-
+  // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
   var shell = createShell(car.position);
+  shell.radians = car.rotation.y + (Math.PI / 2);
+  shell.timeElapsed = 0;
+  shells.push(shell);
+  numShells++;
 }
 
 // set up the sphere vars
-var radius = 50, segments = 16, rings = 16;
+var radius = 20, segments = 16, rings = 16;
 var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xCC0000 });
 var sphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
 
@@ -156,15 +143,20 @@ function createShell(position) {
   mesh.geometry.verticesNeedUpdate = true;
   mesh.geometry.normalsNeedUpdate = true;
   scene.add(mesh);
+  return mesh;
 }
+
+// Shoot keycode
+$(window).keypress(function(e) {
+  if (e.keyCode == 32) {
+    shoot();
+  }
+});
 
 function update() {
   var delta = clock.getDelta();
   var moveDistance = 200 * delta;
   var rotateAngle = Math.PI / 2 * delta; // pi/2 radians (90 degrees) per second
-
-  if ( keyboard.pressed("space") )
-    shoot();
 
   if ( keyboard.pressed("left") )
     cars[activeCar].rotation.y += rotateAngle;
@@ -174,6 +166,27 @@ function update() {
     moveForward(cars[activeCar], moveDistance);
   if ( keyboard.pressed("down") )
     moveBackward(cars[activeCar], moveDistance);
+
+  if (numShells) {
+    var i, shell, x, y;
+    for (i = 0; i < numShells; i++) {
+      shell = shells[i];
+      dist = SHELL_SPEED;
+      x = dist * Math.sin(shell.radians);
+      y = dist * Math.cos(shell.radians);
+
+      console.log(shell.degree, x, y);
+
+      shell.position.x += x;
+      shell.position.z += y;
+
+      if (++shell.timeElapsed > 100) {
+        shells.splice(i, 1);
+        scene.remove(shell);
+        numShells--;
+      }
+    }
+  }
 
   // // collision detection:
   // //   determines if any of the rays from the cube's origin to each vertex
@@ -208,4 +221,20 @@ function animate() {
 
 function render() {
   renderer.render(scene, camera);
+}
+
+function loadObjects() {
+  // var loader = new THREE.ObjectLoader;
+  // loader.load( "models/car.json", function ( geometry, materials ) {
+  //   var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000 } ) );
+  //   scene.add( mesh );
+  // });
+
+  // var loader = new THREE.ColladaLoader();
+  // loader.load('models/civic-red.dae', function (result) {
+  //   result.scene.dynamic = true;
+  //   result.scene.verticesNeedUpdate = true;
+  //   result.scene.normalsNeedUpdate = true;
+  //   scene.add(result.scene);
+  // });
 }
