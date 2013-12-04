@@ -3,39 +3,51 @@ var container, scene, camera, renderer, controls, stats;
 var keyboard = new THREEx.KeyboardState();
 var clock = new THREE.Clock();
 
-// set the scene size
-var WIDTH = window.innerWidth - 16,
-    HEIGHT = window.innerHeight - 16;
-
-// set some camera attributes
-var VIEW_ANGLE = 45,
-    ASPECT = WIDTH / HEIGHT,
-    NEAR = 1,
-    FAR = 1000;
-
-var $container = $('#container');
-var renderer = new THREE.WebGLRenderer();
-var camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-var scene = new THREE.Scene();
-
 init();
-addLights();
-sphere();
 animate();
 
 function init() {
-  $container.css({
-    width: WIDTH,
-    height: HEIGHT
-  });
+  var WIDTH = window.innerWidth - 16,
+      HEIGHT = window.innerHeight - 16,
+      VIEW_ANGLE = 105,
+      ASPECT = WIDTH / HEIGHT,
+      NEAR = .1,
+      FAR = 10000;
 
+  // Scene / Camera
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   scene.add(camera);
-  // the camera starts at 0,0,0 so pull it back
-  camera.position.z = 300;
-  // start the renderer
+  camera.position.set(0, 360, 30);
+  camera.lookAt(scene.position);
+
+  // Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(WIDTH, HEIGHT);
-  // attach the render-supplied DOM element
-  $container.append(renderer.domElement);
+
+  // Container
+  container = document.getElementById('container');
+  container.appendChild( renderer.domElement );
+
+  // Events
+  THREEx.WindowResize(renderer, camera);
+  THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
+
+  // Controls
+
+
+  addLights();
+  sphere();
+  floor();
+}
+
+function floor() {
+  var floorMaterial = new THREE.MeshBasicMaterial({ color:0x444444, side:THREE.DoubleSide });
+  var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  floor.position.y = -0.5;
+  floor.rotation.x = Math.PI / 2;
+  scene.add(floor);
 }
 
 function sphere() {
