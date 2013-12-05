@@ -27,58 +27,60 @@ var rays = [
 // Detect collishs
 function collisionDetect(obj) {
   var collisions, i,
-      // Maximum distance from the origin before we consider collision
-      distance = 32;
+      distance = 25; // Maximum distance from origin to collide
 
   // For each ray
   for (i = 0; i < rays.length; i += 1) {
-      // We reset the raycaster to this direction
-      caster.set(obj.position, rays[i]);
-      // Test if we intersect with any obstacle mesh
-      collisions = caster.intersectObjects(WALLS);
-      // And disable that direction if we do
-      if (collisions.length > 0 && collisions[0].distance <= distance) {
+    // We reset the raycaster to this direction
+    caster.set(obj.position, rays[i]);
 
-        // Walls
-        //         0
-        //     __________
-        //    |          |
-        // 2  |          |  3
-        //    |          |
-        //     -----------
-        //          1
+    // WALL = BOUNCE
+    // Test if we intersect with any obstacle mesh
+    var wall_collisions = caster.intersectObjects(WALLS);
+    if (wall_collisions.length > 0 && wall_collisions[0].distance <= distance) {
+      wallBounce(obj, wall_collisions[0].object.id);
+    }
 
-        // console.log('hit wall', i);
-        // console.log(WALL_INDEX[collisions[0].object.id]);
-        switch(WALL_INDEX[collisions[0].object.id]) {
-          // Left and right
-          case 0:
-          case 2:
-            var bounceRad = Math.PI - obj.radians;
-            if (bounceRad < 0) {
-              bounceRad += Math.PI * 2;
-            }
-            obj.radians = bounceRad;
-            break;
-
-          // Top and bottom
-          case 3:
-          case 1:
-            var bounceRad = 2 * Math.PI - obj.radians;
-            obj.radians = bounceRad;
-            break;
-        }
-
-      }
+    // CAR = EXPLODE
+    carCollide(obj, caster);
   }
 }
 
-function carCollide(obj, ray) {
-  var i;
-  for (i = 0; i < NUM_CARS; i++) {
-    var collisionResults = ray.intersectObject( CARS[i] );
+// Walls
+//         0
+//     __________
+//    |          |
+// 2  |          |  3
+//    |          |
+//     -----------
+//          1
+function wallBounce(obj, wall_id) {
+  switch(WALL_INDEX[wall_id]) {
+    // Left and right
+    case 0:
+    case 2:
+      var bounceRad = Math.PI - obj.radians;
+      if (bounceRad < 0) {
+        bounceRad += Math.PI * 2;
+      }
+      obj.radians = bounceRad;
+      break;
 
-    if (collisionResults.length && obj.fromCar != i) {
+    // Top and bottom
+    case 3:
+    case 1:
+      var bounceRad = 2 * Math.PI - obj.radians;
+      obj.radians = bounceRad;
+      break;
+  }
+}
+
+function carCollide(obj, caster) {
+  var i, distance = 45; // Distance from center of car to collide
+  for (i = 0; i < NUM_CARS; i++) {
+    var car_collisions = caster.intersectObject( CARS[i] );
+
+    if (car_collisions.length && car_collisions[0].distance <= distance && obj.fromCar != i) {
       carExplode(i);
     }
   }

@@ -5,5 +5,6 @@ socket.on('message', function (data) {
 });
 
 function setData(data) {
+  PREV_DATA = DATA;
   DATA = data;
 }

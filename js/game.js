@@ -40,7 +40,7 @@ function createShell(car) {
 }
 
 function moveCar() {
-  if (!DATA) return;
+  if (!DATA || DATA === DATA_PREV) return;
 
   var index = 0,
       x = DATA.x,
@@ -64,4 +64,5 @@ function moveShell(shell) {
 
 function carExplode(index) {
   var car = CARS[index];
+  // console.log('hit car', index);
 }
