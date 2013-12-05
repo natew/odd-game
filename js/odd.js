@@ -21,7 +21,8 @@ var cars = [],
 
 var wireframeMaterial = new THREE.MeshLambertMaterial( { color: 0x000000, wireframe: true, transparent: true } );
 
-var SHELL_SPEED = 15,
+var NUM_CARS = 2,
+    SHELL_SPEED = 8,
     SHELL_DURATION = 300;
 
 init();
@@ -166,6 +167,7 @@ function createShell(car) {
       shellZ = 80 * Math.cos(carAngle);
 
   shell.position.set(car.position.x + shellX, car.position.y, car.position.z + shellZ);
+  shell.fromCar = car.index;
   // shell.geometry.dynamic = true;
   // shell.geometry.verticesNeedUpdate = true;
   // shell.geometry.normalsNeedUpdate = true;
@@ -182,6 +184,7 @@ function createCars() {
       carMaterial );
     var half_screen = SCREEN_WIDTH / 2;
     car.position.set((half_screen * i) - (half_screen/2), 25, 0);
+    car.index = i;
     car.castShadow = true;
     car.receiveShadow = true;
     mesh.add(car);
@@ -238,19 +241,24 @@ var SCALE_X = SCREEN_WIDTH / 25 / 2,
     SCALE_Y = SCREEN_HEIGHT / 18 / 2;
 
 function moveCar(index, x, y) {
-  console.log(x * SCALE_X);
+  // console.log(x * SCALE_X);
   cars[index].position.x = x * SCALE_X;
   cars[index].position.z = - (y * SCALE_Y);
 }
 
 function moveShell(shell) {
   dist = SHELL_SPEED;
-  if (show_radians) console.log(shell.radians);
+  // if (show_radians) console.log(shell.radians);
   x = dist * Math.cos(shell.radians);
   y = (dist * Math.sin(shell.radians)) * -1;
 
   shell.position.x += x;
   shell.position.z += y;
+}
+
+function carExplode(index) {
+  var car = cars[index];
+
 }
 
 // Detect collishs
@@ -267,53 +275,67 @@ function collisionDetect(obj) {
 
     var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 
-    // Loop through walls
-    var i;
-    for (i = 0; i < 4; i++) {
-      var collisionResults = ray.intersectObject( walls[i] );
-      if ( collisionResults.length > 0) console.log(collisionResults[0].distance);
-      if ( collisionResults.length > 0) console.log(obj.geometry.vertices.length);
-      if ( collisionResults.length > 0 && (collisionResults[0].distance) < 40 && collisionResults[0].distance > 20) {
+    if (wallCollide(obj, ray)) break;
+    else if (carCollide(obj, ray)) break;
+  }
+}
 
-        // Walls
-        //         1
-        //     __________
-        //    |          |
-        // 0  |          |  2
-        //    |          |
-        //     -----------
-        //          3
+function carCollide(obj, ray) {
+  var i;
+  for (i = 0; i < NUM_CARS; i++) {
+    var collisionResults = ray.intersectObject( cars[i] );
 
-        // console.log('hit wall', i);
-        // console.log('current deg', obj.radians * 180 / Math.PI);
-        // console.log('bounce deg', bounceRad * 180 / Math.PI);
-
-        switch(i) {
-          // Left and right
-          case 0:
-          case 2:
-            var bounceRad = Math.PI - obj.radians;
-            if (bounceRad < 0) {
-              bounceRad += Math.PI * 2;
-            }
-            obj.radians = bounceRad;
-            break;
-
-          // Top and bottom
-          case 3:
-          case 1:
-            var bounceRad = 2 * Math.PI - obj.radians;
-            obj.radians = bounceRad;
-            break;
-        }
-
-        // Do an extra move just to prevent weird collisions
-        moveShell(obj);
-        return true;
-
-      }
+    if (collisionResults.length && obj.fromCar != i) {
+      carExplode(i);
     }
   }
+}
+
+function wallCollide(obj, ray) {
+  // Loop through walls
+  var i;
+  for (i = 0; i < 4; i++) {
+    var collisionResults = ray.intersectObject( walls[i] );
+    // if ( collisionResults.length > 0) console.log(collisionResults[0].distance);
+    // if ( collisionResults.length > 0) console.log(obj.geometry.vertices.length);
+    if (collisionResults.length) {
+
+      // Walls
+      //         1
+      //     __________
+      //    |          |
+      // 0  |          |  2
+      //    |          |
+      //     -----------
+      //          3
+
+      // console.log('hit wall', i);
+      switch(i) {
+        // Left and right
+        case 0:
+        case 2:
+          var bounceRad = Math.PI - obj.radians;
+          if (bounceRad < 0) {
+            bounceRad += Math.PI * 2;
+          }
+          obj.radians = bounceRad;
+          break;
+
+        // Top and bottom
+        case 3:
+        case 1:
+          var bounceRad = 2 * Math.PI - obj.radians;
+          obj.radians = bounceRad;
+          break;
+      }
+
+      // Do an extra move just to prevent weird collisions
+      moveShell(obj);
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function animate() {
@@ -377,8 +399,8 @@ function disableScroll() {
 
 disableScroll();
 
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://localhost:9001');
 socket.on('news', function (data) {
   console.log(data);
-  socket.emit('my other event', { my: 'data' });
+  // moveCar(0, data.x, data.y);
 });
