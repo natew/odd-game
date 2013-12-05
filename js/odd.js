@@ -42,7 +42,7 @@ function init() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   scene.add(camera);
 
-  camera.position.set(0, (SCREEN_HEIGHT + SCREEN_WIDTH) / 2 + 320, 0);
+  camera.position.set(0, (SCREEN_HEIGHT + SCREEN_WIDTH) / 1.9, 0);
   camera.lookAt(scene.position);
 
   // Renderer
@@ -220,16 +220,27 @@ function update() {
       collisionDetect(shell);
       moveShell(shell);
 
-      if (++shell.timeElapsed > SHELL_DURATION) {
-        shells.splice(i, 1);
-        mesh.remove(shell);
-        numShells--;
-      }
+      // if (++shell.timeElapsed > SHELL_DURATION) {
+      //   shells.splice(i, 1);
+      //   mesh.remove(shell);
+      //   numShells--;
+      // }
     }
   }
 
   controls.update();
   // stats.update();
+}
+
+// 25 x, 18 y
+
+var SCALE_X = SCREEN_WIDTH / 25 / 2,
+    SCALE_Y = SCREEN_HEIGHT / 18 / 2;
+
+function moveCar(index, x, y) {
+  console.log(x * SCALE_X);
+  cars[index].position.x = x * SCALE_X;
+  cars[index].position.z = - (y * SCALE_Y);
 }
 
 function moveShell(shell) {
@@ -296,6 +307,8 @@ function collisionDetect(obj) {
             break;
         }
 
+        // Do an extra move just to prevent weird collisions
+        moveShell(obj);
         return true;
 
       }
@@ -364,3 +377,8 @@ function disableScroll() {
 
 disableScroll();
 
+var socket = io.connect('http://localhost');
+socket.on('news', function (data) {
+  console.log(data);
+  socket.emit('my other event', { my: 'data' });
+});
