@@ -1,7 +1,5 @@
 // 25 x, 18 y
-var SCALE_X = SCREEN_WIDTH / 25 / 2,
-    SCALE_Y = SCREEN_HEIGHT / 18 / 2,
-    shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
     shellGeometry = new THREE.CubeGeometry(30, 30, 30, 1, 1, 1);
 
 function moveForward(car, moveDistance) {

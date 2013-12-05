@@ -1,6 +1,7 @@
 // Globals
 var container, scene, camera, renderer, controls;
 var SCREEN_WIDTH, SCREEN_HEIGHT,
+    SCALE_X, SCALE_Y,
     WORLD = new THREE.Object3D(),
     NUM_CARS = 2,
     NUM_SHELLS = 0,

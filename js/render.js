@@ -4,6 +4,8 @@ animate();
 function init() {
   SCREEN_WIDTH = window.innerWidth;
   SCREEN_HEIGHT = window.innerHeight;
+  SCALE_X = SCREEN_WIDTH / 25 / 2;
+  SCALE_Y = SCREEN_HEIGHT / 18 / 2;
 
   var VIEW_ANGLE = 45,
       ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
