@@ -40,17 +40,23 @@ function createShell(car) {
 }
 
 function moveCar() {
-  if (!DATA || DATA === DATA_PREV) return;
+  var i, len = DATA.length;
 
-  var index = 0,
-      x = DATA.x,
-      y = DATA.y,
-      theta = DATA.theta;
+  // move cars
+  for (i = 0; i < len; i++) {
+    var cur_data = DATA[i];
+    if (!cur_data || cur_data === DATA_PREV[i]) return;
 
-  // console.log(x * SCALE_X);
-  CARS[index].position.x = x * SCALE_X;
-  CARS[index].position.z = - (y * SCALE_Y);
-  CARS[index].rotation.y = theta;
+    var index = cur_data.id,
+        x = cur_data.x,
+        y = cur_data.y,
+        theta = cur_data.theta;
+
+    // console.log(x * SCALE_X);
+    CARS[index].position.x = x * SCALE_X;
+    CARS[index].position.z = - (y * SCALE_Y);
+    CARS[index].rotation.y = theta;
+  }
 }
 
 function moveShell(shell) {

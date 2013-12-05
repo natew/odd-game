@@ -30,12 +30,12 @@ function createScore(index, write) {
   text = new THREE.Mesh( text3d, textMaterial );
 
   if (i == 0)
-    text.position.x = -SCREEN_WIDTH / 2 + centerOffset + 85;
+    text.position.x = -SCREEN_WIDTH / 2 + centerOffset + 135;
   else
-    text.position.x = SCREEN_WIDTH / 2 - centerOffset - 150;
+    text.position.x = SCREEN_WIDTH / 2 - centerOffset - 200;
 
   text.position.y = 100;
-  text.position.z = SCREEN_HEIGHT / 2 - 40;
+  text.position.z = SCREEN_HEIGHT / 2 - 100;
 
   text.rotation.x = -Math.PI / 2;
   text.rotation.y = Math.PI * 2;

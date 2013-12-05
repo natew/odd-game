@@ -7,7 +7,8 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     NUM_SHELLS = 0,
     SHELL_SPEED = 8,
     SHELL_DURATION = 300,
-    DATA, DATA_PREV,
+    DATA = [],
+    DATA_PREV = [],
     SCORES = [3, 3];
 
 // Game items
