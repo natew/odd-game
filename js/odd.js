@@ -13,6 +13,19 @@ var colors = {
   shell: 0xCC0000
 }
 
+//set up particles
+var particleCount = 100,
+    particleGeometry = new THREE.Geometry(),
+    particleMaterial = new THREE.ParticleBasicMaterial({
+      color: 0xFFFFFF,
+      size: 20,
+      map: THREE.ImageUtils.loadTexture(
+          "/images/blue_particle.jpg"
+      ),
+      blending: THREE.AdditiveBlending,
+      transparent: true
+    });
+
 var walls = [];
 var cars = [],
     activeCar = 0,
@@ -61,6 +74,18 @@ function init() {
   // Controls
   controls = new THREE.OrbitControls( camera, renderer.domElement );
 
+  // Particles
+  for ( i = 0; i < particleCount; i ++ ) {
+    var vertex = new THREE.Vector3();
+    vertex.x = Math.random() * 1000 - 500;
+    vertex.y = Math.random() * 1000 - 500;
+    vertex.z = Math.random() * 1000 - 500;
+    particleGeometry.vertices.push( vertex );
+  }
+
+  particles = new THREE.ParticleSystem( particleGeometry, particleMaterial );
+  mesh.add(particles);
+
   createSky();
   createWalls();
   createCars();
@@ -70,7 +95,7 @@ function init() {
 }
 
 function createFloor() {
-  var floorMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, side:THREE.DoubleSide });
+  var floorMaterial = new THREE.MeshPhongMaterial({ color:0xffffff, transparent:true, opacity:0.5 });
   var floorGeometry = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT, 10, 10);
   var floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.position.y = -0.5;
@@ -80,7 +105,7 @@ function createFloor() {
 
 function createSky() {
   var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
-  var skyBoxMaterial = new THREE.MeshPhongMaterial( { color: colors['sky'], side: THREE.BackSide } );
+  var skyBoxMaterial = new THREE.MeshLambertMaterial( { color: colors['sky'], side: THREE.BackSide } );
   var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
   mesh.add(skyBox);
 }
@@ -240,10 +265,11 @@ function update() {
 var SCALE_X = SCREEN_WIDTH / 25 / 2,
     SCALE_Y = SCREEN_HEIGHT / 18 / 2;
 
-function moveCar(index, x, y) {
+function moveCar(index, x, y, theta) {
   // console.log(x * SCALE_X);
   cars[index].position.x = x * SCALE_X;
   cars[index].position.z = - (y * SCALE_Y);
+  cars[index].rotation.y = theta;
 }
 
 function moveShell(shell) {
@@ -258,7 +284,6 @@ function moveShell(shell) {
 
 function carExplode(index) {
   var car = cars[index];
-
 }
 
 // Detect collishs
@@ -400,7 +425,7 @@ function disableScroll() {
 disableScroll();
 
 var socket = io.connect('http://localhost:9001');
-socket.on('news', function (data) {
+socket.on('messages', function (data) {
   console.log(data);
-  // moveCar(0, data.x, data.y);
+  moveCar(0, data.x, data.y, data.theta);
 });
