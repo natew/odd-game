@@ -7,7 +7,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     NUM_SHELLS = 0,
     SHELL_SPEED = 8,
     SHELL_DURATION = 300,
-    DATA, PREV_DATA;
+    DATA, DATA_PREV;
 
 // Game items
 var WALLS = [],
