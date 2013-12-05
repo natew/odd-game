@@ -1,5 +1,5 @@
 // Globals
-var container, scene, camera, renderer, controls;
+var container, scene, camera, renderer, controls, stats;
 var SCREEN_WIDTH, SCREEN_HEIGHT,
     SCALE_X, SCALE_Y,
     WORLD = new THREE.Object3D(),
@@ -7,14 +7,16 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     NUM_SHELLS = 0,
     SHELL_SPEED = 8,
     SHELL_DURATION = 300,
-    DATA, DATA_PREV;
+    DATA, DATA_PREV,
+    SCORES = [3, 3];
 
 // Game items
 var WALLS = [],
     WALL_INDEX = {},
     CARS = [],
     SHELLS = [],
-    activeCar = 0;
+    activeCar = 0,
+    SCORE_TEXT = [];
 
 var keyboard = new THREEx.KeyboardState();
 var clock = new THREE.Clock();

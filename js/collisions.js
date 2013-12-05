@@ -4,13 +4,11 @@ function collisions() {
     for (i = 0; i < NUM_SHELLS; i++) {
       shell = SHELLS[i];
 
-      collisionDetect(shell);
+      collisionDetect(shell, i);
       moveShell(shell);
 
       if (++shell.timeElapsed > SHELL_DURATION) {
-        SHELLS.splice(i, 1);
-        WORLD.remove(shell);
-        NUM_SHELLS--;
+        removeShell(i);
       }
     }
   }
@@ -25,7 +23,7 @@ var rays = [
     caster = new THREE.Raycaster();
 
 // Detect collishs
-function collisionDetect(obj) {
+function collisionDetect(obj, index) {
   var collisions, i,
       distance = 25; // Maximum distance from origin to collide
 
@@ -42,7 +40,7 @@ function collisionDetect(obj) {
     }
 
     // CAR = EXPLODE
-    carCollide(obj, caster);
+    carCollide(obj, caster, index);
   }
 }
 
@@ -75,13 +73,14 @@ function wallBounce(obj, wall_id) {
   }
 }
 
-function carCollide(obj, caster) {
+function carCollide(obj, caster, shellIndex) {
   var i, distance = 45; // Distance from center of car to collide
   for (i = 0; i < NUM_CARS; i++) {
     var car_collisions = caster.intersectObject( CARS[i] );
 
     if (car_collisions.length && car_collisions[0].distance <= distance && obj.fromCar != i) {
       carExplode(i);
+      removeShell(shellIndex);
     }
   }
 }

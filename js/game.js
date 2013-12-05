@@ -62,7 +62,22 @@ function moveShell(shell) {
   shell.position.z += y;
 }
 
+function removeShell(index) {
+  WORLD.remove(SHELLS[index]);
+  SHELLS.splice(index, 1);
+  NUM_SHELLS--;
+}
+
 function carExplode(index) {
   var car = CARS[index];
   // console.log('hit car', index);
+
+  SCORES[index]--;
+  var player_score = SCORES[index];
+  console.log(player_score);
+  updateScore(index, player_score);
+
+  if (player_score == 0) {
+    alert('game over!!!!!!!');
+  }
 }

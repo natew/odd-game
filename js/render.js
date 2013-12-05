@@ -36,6 +36,12 @@ function init() {
   // Controls
   controls = new THREE.OrbitControls( camera, renderer.domElement );
 
+  // Stats
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.top = '0px';
+  container.appendChild( stats.domElement );
+
   createStars();
   createSky();
   createFloor();
@@ -54,7 +60,7 @@ function update() {
   keyEvents(moveDistance, rotateAngle);
   collisions();
   controls.update();
-  // stats.update();
+  stats.update();
 }
 
 function animate() {
