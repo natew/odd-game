@@ -13,7 +13,7 @@ var colors = {
   shell: 0xCC0000
 }
 
-var obstacles = [];
+var walls = [];
 var cars = [],
     activeCar = 0,
     shells = [],
@@ -21,7 +21,8 @@ var cars = [],
 
 var wireframeMaterial = new THREE.MeshLambertMaterial( { color: 0x000000, wireframe: true, transparent: true } );
 
-var SHELL_SPEED = 20;
+var SHELL_SPEED = 15,
+    SHELL_DURATION = 300;
 
 init();
 animate();
@@ -41,7 +42,7 @@ function init() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
   scene.add(camera);
 
-  camera.position.set(0, (SCREEN_HEIGHT + SCREEN_WIDTH) / 2 + 20, 0);
+  camera.position.set(0, (SCREEN_HEIGHT + SCREEN_WIDTH) / 2 + 320, 0);
   camera.lookAt(scene.position);
 
   // Renderer
@@ -96,25 +97,31 @@ function createWalls() {
   var wallLengths = [wallWidth, wallWidth, wallLengthV, wallLengthV];
   var wallX = [0, 0, wallPosH, -wallPosH];
   var wallZ = [wallPosV, -wallPosV, 0, 0];
+  var wall;
 
   for (i = 0; i < 4; i++) {
-    var wallMaterial = new THREE.MeshPhongMaterial( { color: colors['wall'] } );
-    var wall = THREE.SceneUtils.createMultiMaterialObject(
+    wall = new THREE.Mesh(
         new THREE.CubeGeometry(wallWidths[i], wallHeight, wallLengths[i], 1, 1, 1),
-        [ wallMaterial, wireframeMaterial ] );
+        new THREE.MeshPhongMaterial( { color: colors['wall'] } )
+      );
     wall.position.set(wallX[i], wallHeight / 2, wallZ[i]);
     wall.castShadow = true;
     wall.receiveShadow = true;
-    obstacles.push(wall);
+    walls.push(wall);
     mesh.add( wall );
   }
+
+  // Swap walls into nice order this is CRAP
+  var b = walls[3];
+  walls[3] = walls[0];
+  walls[0] = b;
 }
 
 var spotLight;
 function lighting() {
   // Point light
   spotLight = new THREE.SpotLight(colors['light'], 5.0);
-  spotLight.position.set(0, 2000, 0);
+  spotLight.position.set(0, 1500, 0);
   spotLight.castShadow = true;
   // spotLight.shadowCameraVisible = true;
   spotLight.shadowMapWidth = 1024 * 2;
@@ -136,8 +143,12 @@ function moveBackward(car, moveDistance) {
 function shoot() {
   var car = cars[activeCar];
   // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-  var shell = createShell(car.position);
-  shell.radians = car.rotation.y + (Math.PI / 2);
+  var shell = createShell(car);
+
+  shell.radians = (car.rotation.y) % (Math.PI * 2);
+  if (shell.radians < 0) shell.radians += Math.PI * 2;
+  // console.log(shell.radians * 180 / Math.PI);
+
   shell.timeElapsed = 0;
   shells.push(shell);
   numShells++;
@@ -148,9 +159,13 @@ function shoot() {
 var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] });
 var shellGeometry = new THREE.CubeGeometry(30, 30, 30, 1, 1, 1);
 
-function createShell(position) {
-  var shell = new THREE.Mesh( shellGeometry, shellMaterial );
-  shell.position.set(position.x, position.y, position.z);
+function createShell(car) {
+  var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
+      carAngle = car.rotation.y + (Math.PI / 2),
+      shellX = 80 * Math.sin(carAngle),
+      shellZ = 80 * Math.cos(carAngle);
+
+  shell.position.set(car.position.x + shellX, car.position.y, car.position.z + shellZ);
   // shell.geometry.dynamic = true;
   // shell.geometry.verticesNeedUpdate = true;
   // shell.geometry.normalsNeedUpdate = true;
@@ -162,13 +177,13 @@ function createCars() {
   var i;
   for (i = 0; i < 2; i++) {
     var carMaterial = new THREE.MeshPhongMaterial( { color: colors['car'] } );
-    var car = THREE.SceneUtils.createMultiMaterialObject(
-        new THREE.CubeGeometry(80, 50, 50, 1, 1, 1),
-        [ carMaterial, wireframeMaterial ] );
-    car.position.set((500 * i) - 250, 25, 0);
+    var car = new THREE.Mesh(
+      new THREE.CubeGeometry(80, 50, 50, 1, 1, 1),
+      carMaterial );
+    var half_screen = SCREEN_WIDTH / 2;
+    car.position.set((half_screen * i) - (half_screen/2), 25, 0);
     car.castShadow = true;
     car.receiveShadow = true;
-    obstacles.push(car);
     mesh.add(car);
     cars.push(car);
   }
@@ -180,6 +195,8 @@ $(window).keypress(function(e) {
     shoot();
   }
 });
+
+var show_radians = false;
 
 function update() {
   var delta = clock.getDelta();
@@ -199,16 +216,11 @@ function update() {
     var i, shell, x, y;
     for (i = 0; i < numShells; i++) {
       shell = shells[i];
-      dist = SHELL_SPEED;
-      x = dist * Math.sin(shell.radians);
-      y = dist * Math.cos(shell.radians);
-
-      shell.position.x += x;
-      shell.position.z += y;
 
       collisionDetect(shell);
+      moveShell(shell);
 
-      if (++shell.timeElapsed > 100) {
+      if (++shell.timeElapsed > SHELL_DURATION) {
         shells.splice(i, 1);
         mesh.remove(shell);
         numShells--;
@@ -218,6 +230,77 @@ function update() {
 
   controls.update();
   // stats.update();
+}
+
+function moveShell(shell) {
+  dist = SHELL_SPEED;
+  if (show_radians) console.log(shell.radians);
+  x = dist * Math.cos(shell.radians);
+  y = (dist * Math.sin(shell.radians)) * -1;
+
+  shell.position.x += x;
+  shell.position.z += y;
+}
+
+// Detect collishs
+function collisionDetect(obj) {
+  var originPoint = obj.position.clone();
+  // if (!obj.geometry) return;
+
+  // Loop through vertices
+  for (var vertexIndex = 0; vertexIndex < obj.geometry.vertices.length; vertexIndex++) {
+    var localVertex = obj.geometry.vertices[vertexIndex].clone();
+
+    var globalVertex = localVertex.applyMatrix4( obj.matrix );
+    var directionVector = globalVertex.sub( obj.position );
+
+    var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+
+    // Loop through walls
+    var i;
+    for (i = 0; i < 4; i++) {
+      var collisionResults = ray.intersectObject( walls[i] );
+      if ( collisionResults.length > 0) console.log(collisionResults[0].distance);
+      if ( collisionResults.length > 0) console.log(obj.geometry.vertices.length);
+      if ( collisionResults.length > 0 && (collisionResults[0].distance) < 40 && collisionResults[0].distance > 20) {
+
+        // Walls
+        //         1
+        //     __________
+        //    |          |
+        // 0  |          |  2
+        //    |          |
+        //     -----------
+        //          3
+
+        // console.log('hit wall', i);
+        // console.log('current deg', obj.radians * 180 / Math.PI);
+        // console.log('bounce deg', bounceRad * 180 / Math.PI);
+
+        switch(i) {
+          // Left and right
+          case 0:
+          case 2:
+            var bounceRad = Math.PI - obj.radians;
+            if (bounceRad < 0) {
+              bounceRad += Math.PI * 2;
+            }
+            obj.radians = bounceRad;
+            break;
+
+          // Top and bottom
+          case 3:
+          case 1:
+            var bounceRad = 2 * Math.PI - obj.radians;
+            obj.radians = bounceRad;
+            break;
+        }
+
+        return true;
+
+      }
+    }
+  }
 }
 
 function animate() {
@@ -248,53 +331,7 @@ function loadObjects() {
   // });
 }
 
-var limit = 10;
-
-// function collisionDetect(obj) {
-//   var originPoint = obj.position.clone();
-//   for (var vertexIndex = 0; vertexIndex < obj.geometry.vertices.length; vertexIndex++) {
-//     var localVertex = obj.geometry.vertices[vertexIndex].clone();
-//     var globalVertex = localVertex.applyMatrix4( obj.matrix );
-//     var directionVector = globalVertex.sub( obj.position );
-
-//     var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-//     var collisionResults = ray.intersectObjects( obstacles );
-//     if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() )
-//       console.log('hit')
-//   }
-// }
-
-var collisions,
-    i,
-    distance = 32,
-    rays = [
-      new THREE.Vector3(0, 0, 1),
-      new THREE.Vector3(1, 0, 1),
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(1, 0, -1),
-      new THREE.Vector3(0, 0, -1),
-      new THREE.Vector3(-1, 0, -1),
-      new THREE.Vector3(-1, 0, 0),
-      new THREE.Vector3(-1, 0, 1)
-    ],
-    caster = new THREE.Raycaster();
-
-function collisionDetect(obj) {
-  // for each ray
-  for (i = 0; i < rays.length; i++) {
-    // set raycaster position
-    if (limit-- > 0) console.log(obj.position);
-    caster.set(obj.position, rays[i]);
-    // if (i == 0) console.log(caster);
-    // debugger;
-    collisions = caster.intersectObjects(obstacles);
-    if (collisions.length > 0 && collisions[0].distance <= distance) {
-      console.log('colllllide')
-    }
-  }
-}
-
-
+// disable scroll
 var keys = [37, 38, 39, 40];
 
 function preventDefault(e) {
@@ -326,3 +363,4 @@ function disableScroll() {
 }
 
 disableScroll();
+
