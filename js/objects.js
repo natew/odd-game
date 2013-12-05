@@ -1,3 +1,5 @@
+var floor;
+
 function createStars() {
   var particleCount = 100,
       particleGeometry = new THREE.Geometry(),
@@ -25,11 +27,11 @@ function createStars() {
 }
 
 function createFloor() {
-  var floorMaterial = new THREE.MeshPhongMaterial({ color:0xffffff, transparent:true, opacity:0.5 });
-  var floorGeometry = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT, 10, 10);
-  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.position.y = -0.5;
-  floor.rotation.x = Math.PI / 2;
+  var floorMaterial = new THREE.MeshLambertMaterial({ color:0xffffff });
+  var floorGeometry = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT);
+  floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  // floor.position.y = -0.5;
+  floor.rotation.x = -Math.PI / 2;
   WORLD.add(floor);
 }
 
@@ -41,36 +43,60 @@ function createSky() {
 }
 
 function createWalls() {
-  var i;
-  var wallLengthH = SCREEN_WIDTH,
-      wallLengthV = SCREEN_HEIGHT,
-      wallPosH = wallLengthH / 2,
-      wallPosV = wallLengthV / 2,
-      wallWidth = 20,
-      wallHeight = 40;
+  // var i;
+  // var wallLengthH = SCREEN_WIDTH,
+  //     wallLengthV = SCREEN_HEIGHT,
+  //     wallPosH = wallLengthH / 2,
+  //     wallPosV = wallLengthV / 2,
+  //     wallWidth = 20,
+  //     wallHeight = 40;
 
-  var wallWidths = [wallLengthH, wallLengthH, wallWidth, wallWidth];
-  var wallLengths = [wallWidth, wallWidth, wallLengthV, wallLengthV];
-  var wallX = [0, 0, wallPosH, -wallPosH];
-  var wallZ = [wallPosV, -wallPosV, 0, 0];
-  var wall;
+  // var wallWidths = [wallLengthH, wallLengthH, wallWidth, wallWidth];
+  // var wallLengths = [wallWidth, wallWidth, wallLengthV, wallLengthV];
+  // var wallX = [0, 0, wallPosH, -wallPosH];
+  // var wallZ = [wallPosV, -wallPosV, 0, 0];
+  // var wall;
 
-  for (i = 0; i < 4; i++) {
-    wall = new THREE.Mesh(
-        new THREE.CubeGeometry(wallWidths[i], wallHeight, wallLengths[i], 1, 1, 1),
-        new THREE.MeshPhongMaterial( { color: colors['wall'] } )
-      );
-    wall.position.set(wallX[i], wallHeight / 2, wallZ[i]);
-    wall.castShadow = true;
-    wall.receiveShadow = true;
-    WALLS.push(wall);
-    WORLD.add(wall);
-  }
+  // for (i = 0; i < 4; i++) {
+  //   wall = new THREE.Mesh(
+  //       new THREE.CubeGeometry(wallWidths[i], wallHeight, wallLengths[i], 1, 1, 1),
+  //       new THREE.MeshPhongMaterial( { color: colors['wall'] } )
+  //     );
+  //   wall.position.set(wallX[i], wallHeight / 2, wallZ[i]);
+  //   wall.castShadow = true;
+  //   wall.receiveShadow = true;
+  //   WALLS.push(wall);
+  //   WORLD.add(wall);
+  // }
 
   // Swap walls into nice order this is CRAP
-  var b = WALLS[3];
-  WALLS[3] = WALLS[0];
-  WALLS[0] = b;
+  // var b = WALLS[3];
+  // WALLS[3] = WALLS[0];
+  // WALLS[0] = b;
+
+  var material = new THREE.MeshLambertMaterial( { color: colors['wall'] } ),
+      height = 128,
+      w = [
+        new THREE.PlaneGeometry(floor.geometry.height, height),
+        new THREE.PlaneGeometry(floor.geometry.width, height),
+        new THREE.PlaneGeometry(floor.geometry.height, height),
+        new THREE.PlaneGeometry(floor.geometry.width, height)
+      ];
+
+  for (i = 0; i < w.length; i += 1) {
+    WALLS[i] = new THREE.Mesh(w[i], material);
+    WALLS[i].position.y = height / 2;
+    WORLD.add(WALLS[i]);
+    WALL_INDEX[WALLS[i].id] = i;
+  }
+
+  WALLS[0].rotation.y = -Math.PI / 2;
+  WALLS[0].position.x = floor.geometry.width / 2;
+  WALLS[1].rotation.y = Math.PI;
+  WALLS[1].position.z = floor.geometry.height / 2;
+  WALLS[2].rotation.y = Math.PI / 2;
+  WALLS[2].position.x = -floor.geometry.width / 2;
+  WALLS[3].position.z = -floor.geometry.height / 2;
 }
 
 function lighting() {

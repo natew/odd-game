@@ -2,36 +2,74 @@ function collisions() {
   if (NUM_SHELLS) {
     var i, shell, x, y;
     for (i = 0; i < NUM_SHELLS; i++) {
-      shell = shells[i];
+      shell = SHELLS[i];
 
       collisionDetect(shell);
       moveShell(shell);
 
-      // if (++shell.timeElapsed > SHELL_DURATION) {
-      //   shells.splice(i, 1);
-      //   mesh.remove(shell);
-      //   NUM_SHELLS--;
-      // }
+      if (++shell.timeElapsed > SHELL_DURATION) {
+        SHELLS.splice(i, 1);
+        WORLD.remove(shell);
+        NUM_SHELLS--;
+      }
     }
   }
 }
 
+var rays = [
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(0, 0, -1),
+      new THREE.Vector3(-1, 0, 0)
+    ],
+    caster = new THREE.Raycaster();
+
 // Detect collishs
 function collisionDetect(obj) {
-  var originPoint = obj.position.clone();
-  // if (!obj.geometry) return;
+  var collisions, i,
+      // Maximum distance from the origin before we consider collision
+      distance = 32;
 
-  // Loop through vertices
-  for (var vertexIndex = 0; vertexIndex < obj.geometry.vertices.length; vertexIndex++) {
-    var localVertex = obj.geometry.vertices[vertexIndex].clone();
+  // For each ray
+  for (i = 0; i < rays.length; i += 1) {
+      // We reset the raycaster to this direction
+      caster.set(obj.position, rays[i]);
+      // Test if we intersect with any obstacle mesh
+      collisions = caster.intersectObjects(WALLS);
+      // And disable that direction if we do
+      if (collisions.length > 0 && collisions[0].distance <= distance) {
 
-    var globalVertex = localVertex.applyMatrix4( obj.matrix );
-    var directionVector = globalVertex.sub( obj.position );
+        // Walls
+        //         0
+        //     __________
+        //    |          |
+        // 2  |          |  3
+        //    |          |
+        //     -----------
+        //          1
 
-    var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+        // console.log('hit wall', i);
+        // console.log(WALL_INDEX[collisions[0].object.id]);
+        switch(WALL_INDEX[collisions[0].object.id]) {
+          // Left and right
+          case 0:
+          case 2:
+            var bounceRad = Math.PI - obj.radians;
+            if (bounceRad < 0) {
+              bounceRad += Math.PI * 2;
+            }
+            obj.radians = bounceRad;
+            break;
 
-    if (wallCollide(obj, ray)) break;
-    else if (carCollide(obj, ray)) break;
+          // Top and bottom
+          case 3:
+          case 1:
+            var bounceRad = 2 * Math.PI - obj.radians;
+            obj.radians = bounceRad;
+            break;
+        }
+
+      }
   }
 }
 

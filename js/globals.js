@@ -5,12 +5,14 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     NUM_CARS = 2,
     NUM_SHELLS = 0,
     SHELL_SPEED = 8,
-    SHELL_DURATION = 300;
+    SHELL_DURATION = 300,
+    DATA;
 
 // Game items
 var WALLS = [],
+    WALL_INDEX = {},
     CARS = [],
-    shells = [],
+    SHELLS = [],
     activeCar = 0;
 
 var keyboard = new THREEx.KeyboardState();

@@ -36,9 +36,9 @@ function init() {
 
   createStars();
   createSky();
+  createFloor();
   createWalls();
   createCars();
-  createFloor();
   lighting();
   loadObjects();
 }
@@ -48,17 +48,19 @@ function update() {
   var moveDistance = 200 * delta;
   var rotateAngle = Math.PI / 2 * delta; // pi/2 radians (90 degrees) per second
 
+  moveCar();
   keyEvents(moveDistance, rotateAngle);
   collisions();
-
   controls.update();
   // stats.update();
 }
 
 function animate() {
-  requestAnimationFrame(animate);
-  render();
-  update();
+  setTimeout(function() {
+    requestAnimationFrame(animate);
+    update();
+    render();
+  }, 1000 / 100);
 }
 
 function render() {

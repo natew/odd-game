@@ -22,7 +22,7 @@ function shoot() {
   // console.log(shell.radians * 180 / Math.PI);
 
   shell.timeElapsed = 0;
-  shells.push(shell);
+  SHELLS.push(shell);
   NUM_SHELLS++;
 }
 
@@ -41,7 +41,14 @@ function createShell(car) {
   return shell;
 }
 
-function moveCar(index, x, y, theta) {
+function moveCar() {
+  if (!DATA) return;
+
+  var index = 0,
+      x = DATA.x,
+      y = DATA.y,
+      theta = DATA.theta;
+
   // console.log(x * SCALE_X);
   CARS[index].position.x = x * SCALE_X;
   CARS[index].position.z = - (y * SCALE_Y);
