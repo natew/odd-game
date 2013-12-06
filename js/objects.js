@@ -77,7 +77,7 @@ function lighting() {
   var spotLight;
   // Spot light
   spotLight = new THREE.SpotLight(colors['light'], 1.8);
-  spotLight.position.set(0, -200, 0);
+  spotLight.position.set(0, -400, 0);
   spotLight.castShadow = true;
   spotLight.shadowDarkness = 0.6;
   // spotLight.shadowCameraVisible = true;

@@ -155,7 +155,7 @@ BONUS_TYPES[4].run = function(index) {
 
 // Banana
 BONUS_TYPES[5] = _.clone(bonus);
-BONUS_TYPES[5].rarity = 7;
+BONUS_TYPES[5].rarity = 4;
 BONUS_TYPES[5].run = function(index) {
   b.dropBanana(index);
 }
