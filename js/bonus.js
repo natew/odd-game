@@ -95,6 +95,10 @@ var b = {
     shell.timeElapsed = 0;
     SHELLS.push(shell);
     NUM_SHELLS++;
+  },
+  dropBanana: function(index) {
+    var car = CARS[index];
+    var banana = createBanana(car, BANANA_SIZE);
   }
 };
 
@@ -129,6 +133,12 @@ BONUS_TYPES[4] = _.clone(bonus);
 BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
+}
+
+BONUS_TYPES[5] = _.clone(bonus);
+BONUS_TYPES[5].rarity = 7;
+BONUS_TYPES[5].run = function(index) {
+  b.dropBanana(index);
 }
 
 // Start placing them on the board
@@ -211,8 +221,8 @@ function giveBonuses() {
       bonus.shadowDarkness = 1.0;
       bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
-      // bonus.typeIndex = 4;
-      bonus.typeIndex = getBonusType();
+      bonus.typeIndex = 5;
+      // bonus.typeIndex = getBonusType();
       WORLD.add(bonus);
       BONUSES.push(bonus);
 

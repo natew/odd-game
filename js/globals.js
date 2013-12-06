@@ -11,6 +11,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     SHELL_DURATION = 300,
     SHELL_SIZE = 15,
     BIG_SHELL_SIZE = 75,
+    BANANA_SIZE = 40,
     BONUS_SIZE = 30,
     BONUS_DURATION = 5000,
     DATA = [],
@@ -27,6 +28,7 @@ var WALLS = [],
     CARS = [],
     BONUSES = [],
     SHELLS = [],
+    BANANAS = [],
     activeCar = 0,
     SCORE_TEXT = [];
 
@@ -40,5 +42,6 @@ var colors = {
   car: 0xd8d600,
   car2: 0x2f70ff,
   shell: 0xCC0000,
-  bonus: 0x183759
+  bonus: 0x183759,
+  banana: 0xFFFF00
 }

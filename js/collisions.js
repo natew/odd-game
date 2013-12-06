@@ -1,16 +1,24 @@
 function collisions() {
   carBonusCollision();
+  carBananaCollision();
 }
 
 function carBonusCollision() {
   if (BONUSES.length) {
     var i, bonus;
     for (i = 0; i < BONUSES.length; i++) {
-      bonus = BONUSES[i];
-      collisionDetectBonus(bonus, i);
+      collisionDetectBonus(i);
     }
   }
 
+}
+function carBananaCollision() {
+  if (BANANAS.length) {
+    var i, banana;
+    for (i = 0; i < BANANAS.length; i++) {
+      collisionDetectBanana(i);
+    }
+  }
 }
 
 var rays = [
@@ -43,7 +51,8 @@ function collisionDetectShell(obj, index) {
   }
 }
 
-function collisionDetectBonus(obj, index) {
+function collisionDetectBonus(index) {
+  var obj = BONUSES[index];
   var collisions, i,
       distance = obj.size;
 
@@ -54,13 +63,30 @@ function collisionDetectBonus(obj, index) {
       var car_collisions = caster.intersectObject( CARS[j] );
 
       if (car_collisions.length && car_collisions[0].distance <= distance) {
-        console.log('pickup by', j);
+        // console.log('pickup by', j);
         givePlayerBonus(j, index);
       }
     }
   }
 }
 
+function collisionDetectBanana(index) {
+  var obj = BANANAS[index];
+  var i, distance = CAR_SIZE / 2; // Distance from center of car to collide
+
+  for (i = 0; i < rays.length; i += 1) {
+    caster.set(obj.position, rays[i]);
+    var j;
+    for (j = 0; j < NUM_CARS; j++) {
+      var car_collisions = caster.intersectObject( CARS[j] );
+
+      if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[i]) {
+        carExplode(j);
+        removeBanana(index);
+      }
+    }
+  } 
+}
 // Walls
 //         0
 //     __________
@@ -101,6 +127,8 @@ function carCollideShell(obj, caster, shellIndex) {
     }
   }
 }
+
+
 
 function wallCollide(obj, ray) {
   // Loop through walls
