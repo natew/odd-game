@@ -45,6 +45,7 @@ function createShell(car, shellSize, attributes) {
   shell.shadowDarkness = 0.5;
   shell.size = shellSize;
   shell.seeking = _.contains(attributes, "seeking");
+  shell.pulse = _.contains(attributes, "pulse");
   WORLD.add(shell);
   return shell;
 }
@@ -130,6 +131,16 @@ function moveShell(shell) {
     // }
     // shell.radians += (dTheta / 100) % (Math.PI * 2);
     // console.log(distToOpp, dTheta);
+  }
+
+  if (shell.pulse) {
+    if (shell.timeElapsed % 10 === 0) {
+      var scale = 5 * Math.abs(Math.sin(shell.timeElapsed));
+      shell.scale.x = scale;
+      shell.scale.z = scale;
+      // this is hardcoded, I'll fix it later probably
+      shell.size = scale * SHELL_SIZE;
+    }
   }
   x = dist * Math.cos(shell.radians);
   y = (dist * Math.sin(shell.radians)) * -1;
