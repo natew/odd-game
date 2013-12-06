@@ -106,7 +106,7 @@ BONUS_TYPES[0].run = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 3;
+BONUS_TYPES[1].rarity = 3000;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
 };
@@ -271,5 +271,6 @@ function fadeBonus(delta) {
 function givePlayerBonus(pIndex, bIndex) {
   var bonusTypeIndex = BONUSES[bIndex].typeIndex;
   PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bonusTypeIndex]));
+  console.log(PLAYER_BONUSES[pIndex]);
   removeBonus(bIndex);
 }
