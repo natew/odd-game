@@ -18,6 +18,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
 var WALLS = [],
     WALL_INDEX = {},
     CARS = [],
+    BONUSES = [],
     SHELLS = [],
     activeCar = 0,
     SCORE_TEXT = [];

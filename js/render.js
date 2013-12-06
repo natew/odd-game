@@ -60,6 +60,7 @@ function update() {
   moveCar();
   keyEvents(moveDistance, rotateAngle);
   collisions();
+  rotateBonus();
   controls.update();
   stats.update();
 }

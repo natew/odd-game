@@ -25,7 +25,11 @@ function shuffleBonuses() {
   bonusPositions = _.zip(_.shuffle(xBonuses), _.shuffle(yBonuses));
 }
 
-var bonusMaterial = new THREE.MeshLambertMaterial({ color: colors['bonus'] }),
+var bonusMaterial = new THREE.MeshPhongMaterial({
+      color: colors['bonus'],
+      transparency: true,
+      opacity: 0.2
+    }),
     bonusGeometry = new THREE.CubeGeometry(BONUS_SIZE, BONUS_SIZE, BONUS_SIZE, 1, 1, 1);
 
 // Drop a bonus on the board!
@@ -46,7 +50,7 @@ function bonus() {
     var bonusX = bonusPositions[i][0] * SCALE_X,
         bonusZ = bonusPositions[i][1] * SCALE_Y;
 
-        console.log('checking bonus', bonusX, bonusZ);
+        // console.log('checking bonus', bonusX, bonusZ);
 
     // Loop through cars positions
     var j, didntHit = [false, false];
@@ -65,10 +69,14 @@ function bonus() {
     if (didntHit[0] && didntHit[1]) {
       // console.log('create bonus', bonusX, bonusZ);
       var bonus = new THREE.Mesh( bonusGeometry, bonusMaterial );
+      bonus.rotation.z = 2;
+      bonus.rotation.y = 3;
+      bonus.rotation.x = 2;
       bonus.position.set(bonusX, bonusY, bonusZ);
       bonus.castShadow = true;
-      bonus.shadowDarkness = 0.5;
+      bonus.shadowDarkness = 1.0;
       WORLD.add(bonus);
+      BONUSES.push(bonus);
       activeBonuses.push(bonus);
 
       if (++given == givePerTurn) return;
@@ -79,5 +87,19 @@ function bonus() {
 function clearBonuses() {
   for (var i = 0; i < activeBonuses.length; i++) {
     WORLD.remove(activeBonuses[i]);
+    BONUSES.slice(i, 1);
+  }
+}
+
+function removeBonus(index) {
+  WORLD.remove(BONUSES[index]);
+  BONUSES.slice(index, 1);
+}
+
+function rotateBonus() {
+  var xAxis = new THREE.Vector3(0,0,1);
+  for (var i = 0; i < activeBonuses.length; i++) {
+    var bonus = activeBonuses[i];
+    bonus.rotateOnAxis( xAxis, Math.PI / 180 );
   }
 }

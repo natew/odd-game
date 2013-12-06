@@ -1,4 +1,9 @@
 function collisions() {
+  carBonusCollision();
+  carShellCollision();
+}
+
+function carShellCollision() {
   if (NUM_SHELLS) {
     var i, shell, x, y;
     for (i = 0; i < NUM_SHELLS; i++) {
@@ -12,6 +17,10 @@ function collisions() {
       }
     }
   }
+}
+
+function carBonusCollision() {
+
 }
 
 var rays = [
@@ -40,7 +49,7 @@ function collisionDetect(obj, index) {
     }
 
     // CAR = EXPLODE
-    carCollide(obj, caster, index);
+    carCollideShell(obj, caster, index);
   }
 }
 
@@ -73,7 +82,7 @@ function wallBounce(obj, wall_id) {
   }
 }
 
-function carCollide(obj, caster, shellIndex) {
+function carCollideShell(obj, caster, shellIndex) {
   var i, distance = CAR_SIZE / 2; // Distance from center of car to collide
   for (i = 0; i < NUM_CARS; i++) {
     var car_collisions = caster.intersectObject( CARS[i] );
