@@ -12,7 +12,7 @@ var b = {
     // console.log("shoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, 0, false);
+    var shell = createShell(car, SHELL_SIZE);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -54,7 +54,7 @@ var b = {
     // console.log("bigShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, BIG_SHELL_SIZE, false);
+    var shell = createShell(car, BIG_SHELL_SIZE);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -70,7 +70,7 @@ var b = {
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
     var spread = Math.PI / 6;
     for (var i = spread * -1; i <= spread; i += spread) {
-      var shell = createShell(car, SHELL_SIZE, false);
+      var shell = createShell(car, SHELL_SIZE);
 
       shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
       if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -85,7 +85,7 @@ var b = {
     // console.log("seekingShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, true);
+    var shell = createShell(car, SHELL_SIZE, ["seeking"]);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
