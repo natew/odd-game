@@ -41,10 +41,6 @@ BONUS_TYPES[1].run = function() {
   b.invincible(this.playerIndex);
 };
 
-//
-// Setup first bonuses
-givePlayerBonus(0, 0);
-
 
 // Start placing them on the board
 function startBonuses() {
@@ -52,7 +48,7 @@ function startBonuses() {
   giveBonuses();
   setInterval(function() {
     giveBonuses();
-  }, 1000);
+  }, BONUS_DURATION);
 }
 
 // vars for placing bonuses
@@ -76,8 +72,8 @@ function shuffleBonuses() {
 
 var bonusMaterial = new THREE.MeshPhongMaterial({
       color: colors['bonus'],
-      transparency: true,
-      opacity: 0.2
+      transparent: true,
+      opacity: 1.0
     }),
     bonusGeometry = new THREE.CubeGeometry(BONUS_SIZE, BONUS_SIZE, BONUS_SIZE, 1, 1, 1);
 
@@ -124,6 +120,7 @@ function giveBonuses() {
       bonus.position.set(bonusX, bonusY, bonusZ);
       bonus.castShadow = true;
       bonus.shadowDarkness = 1.0;
+      bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
       bonus.typeIndex = 0;
       WORLD.add(bonus);
@@ -153,6 +150,14 @@ function rotateBonus() {
   for (var i = 0; i < BONUSES.length; i++) {
     var bonus = BONUSES[i];
     bonus.rotateOnAxis( xAxis, Math.PI / 180 );
+  }
+}
+
+function fadeBonus(delta) {
+  // console.log(delta);
+  for (var i = 0; i < BONUSES.length; i++) {
+    var bonus = BONUSES[i];
+    bonus.material.opacity -= BONUS_DURATION * delta / 60000;
   }
 }
 

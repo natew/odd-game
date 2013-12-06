@@ -61,6 +61,7 @@ function update() {
   keyEvents(moveDistance, rotateAngle);
   collisions();
   rotateBonus();
+  fadeBonus(delta);
   controls.update();
   stats.update();
 }
