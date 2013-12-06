@@ -9,10 +9,10 @@ var cloak;
 // BONUSES
 var b = {
   shoot: function(index) {
-    console.log("shoot");
+    // console.log("shoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, 0);
+    var shell = createShell(car, SHELL_SIZE, 0, false);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -24,7 +24,7 @@ var b = {
   },
 
   invincible: function(index) {
-    console.log("invincible");
+    // console.log("invincible");
     INVINCIBLE[index] = true;
 
     if (cloak) removeCloak();
@@ -52,10 +52,10 @@ var b = {
   },
 
   bigShoot: function(index) {
-    console.log("bigShoot");
+    // console.log("bigShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, BIG_SHELL_SIZE, 0);
+    var shell = createShell(car, BIG_SHELL_SIZE, false);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -66,12 +66,12 @@ var b = {
     NUM_SHELLS++;
   },
   triShoot: function(index) {
-    console.log("triShoot");
+    // console.log("triShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
     var spread = Math.PI / 6;
     for (var i = spread * -1; i <= spread; i += spread) {
-      var shell = createShell(car, SHELL_SIZE, 0);
+      var shell = createShell(car, SHELL_SIZE, false);
 
       shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
       if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -81,6 +81,20 @@ var b = {
       SHELLS.push(shell);
       NUM_SHELLS++;
     }
+  },
+  seekingShoot: function(index) {
+    // console.log("seekingShoot");
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    var shell = createShell(car, SHELL_SIZE, true);
+
+    shell.radians = (car.rotation.y) % (Math.PI * 2);
+    if (shell.radians < 0) shell.radians += Math.PI * 2;
+    // console.log(shell.radians * 180 / Math.PI);
+
+    shell.timeElapsed = 0;
+    SHELLS.push(shell);
+    NUM_SHELLS++;
   }
 };
 
@@ -109,6 +123,12 @@ BONUS_TYPES[3] = _.clone(bonus);
 BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
+}
+
+BONUS_TYPES[4] = _.clone(bonus);
+BONUS_TYPES[4].rarity = 3;
+BONUS_TYPES[4].run = function(index) {
+  b.seekingShoot(index);
 }
 
 // Start placing them on the board
@@ -191,7 +211,7 @@ function giveBonuses() {
       bonus.shadowDarkness = 1.0;
       bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
-      // bonus.typeIndex = Math.floor(Math.random() * BONUS_TYPES.length) % BONUS_TYPES.length;
+      // bonus.typeIndex = 4;
       bonus.typeIndex = getBonusType();
       WORLD.add(bonus);
       BONUSES.push(bonus);
@@ -202,7 +222,7 @@ function giveBonuses() {
 }
 
 function clearBonuses() {
-  console.log(BONUSES.length)
+  // console.log(BONUSES.length)
   _.each(BONUSES, function(bonus) {
     WORLD.remove(bonus);
   });
@@ -219,12 +239,12 @@ function getBonusType() {
       highestProb = prob;
     }
   }
-  console.log('pick: ', currentPick);
+  // console.log('pick: ', currentPick);
   return currentPick;
 }
 
 function removeBonus(index) {
-  console.log(BONUSES[index]);
+  // console.log(BONUSES[index]);
   WORLD.remove(BONUSES[index]);
   BONUSES.splice(index, 1);
 }

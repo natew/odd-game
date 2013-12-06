@@ -28,7 +28,7 @@ function playerAction(index) {
 // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
 //     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
-function createShell(car, shellSize) {
+function createShell(car, shellSize, seeking) {
   var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
       shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
   var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
@@ -44,6 +44,7 @@ function createShell(car, shellSize) {
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
   shell.size = shellSize;
+  shell.seeking = seeking;
   WORLD.add(shell);
   return shell;
 }
@@ -56,7 +57,7 @@ function moveCar() {
     var cur_data = DATA[i];
     if (!cur_data || cur_data === DATA_PREV[i]) return;
 
-    var index = cur_data.id,
+    var index = cur_data.carId,
         x = cur_data.x,
         y = cur_data.y,
         theta = cur_data.theta;
@@ -83,9 +84,36 @@ function moveShells() {
     }
   }
 }
-
+var seekBuffer = [];
 function moveShell(shell) {
   dist = SHELL_SPEED;
+  // console.log(shell.seeking);
+  if (shell.seeking) {
+    var toCarIndex = 1 - shell.fromCar;  
+    var oppCar = CARS[toCarIndex];
+    var dY = oppCar.position.z - shell.position.z;
+    var dX = oppCar.position.x - shell.position.x;
+    if (seekBuffer.length < SEEKING_DIFFICULTY) {
+      seekBuffer.push(-1 * Math.atan2(dY, dX));
+    }
+    else {
+      shell.radians = seekBuffer.shift();
+      seekBuffer.push(-1 * Math.atan2(dY, dX));
+    }
+    // var distToOpp = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+    // var dTheta = (Math.atan2(dY, dX) * -1) - shell.radians;
+    // console.log(dTheta);
+    // if (Math.abs(dTheta) > 1) {
+    //   // console.log(shell.radians, (shell.radians + dTheta / 2), (-1 * Math.atan2(dY, dX)));
+    //   // shell.radians += dTheta / 2;
+    // }
+    // else {
+    //   shell.radians = -1 * Math.atan2(dY, dX); 
+      
+    // }
+    // shell.radians += (dTheta / 100) % (Math.PI * 2);
+    // console.log(distToOpp, dTheta);
+  }
   x = dist * Math.cos(shell.radians);
   y = (dist * Math.sin(shell.radians)) * -1;
 
@@ -98,6 +126,7 @@ function removeShell(index) {
   // renderer.deallocateObject(SHELLS[index]);
   SHELLS.splice(index, 1);
   NUM_SHELLS--;
+  seekBuffer = [];
 }
 
 function carExplode(index) {

@@ -18,7 +18,8 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     SCORES = [3, 3],
     PLAYER_BONUSES = [[], []],
     BONUS_TYPES = [],
-    INVINCIBLE = [false, false];
+    INVINCIBLE = [false, false],
+    SEEKING_DIFFICULTY = 18;
 
 // Game items
 var WALLS = [],
