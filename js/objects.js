@@ -75,13 +75,12 @@ function lighting() {
   var spotLight;
   // Point light
   spotLight = new THREE.SpotLight(colors['light'], 1.5);
-  spotLight.position.set(50, 500, 300);
+  spotLight.position.set(-300, 500, 200);
   spotLight.castShadow = true;
-  spotLight.shadowDarkness = 0.5;
-  spotLight.shadowCameraVisible = true;
+  spotLight.shadowDarkness = 0.6;
+  // spotLight.shadowCameraVisible = true;
   spotLight.shadowCameraNear = 500;
   spotLight.shadowCameraFar = 4000;
-  spotLight.shadowCameraFov = 80;
   WORLD.add(spotLight);
 
 
@@ -93,7 +92,11 @@ function lighting() {
 function createCars() {
   var i;
   for (i = 0; i < 2; i++) {
-    var carMaterial = new THREE.MeshPhongMaterial( { color: colors['car'] } );
+    var carMaterial = new THREE.MeshPhongMaterial({
+      color: colors['car'],
+      transparent: true,
+      opacity: 0
+    });
     var car = new THREE.Mesh(
       new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),
       carMaterial );
