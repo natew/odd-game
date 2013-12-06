@@ -38,6 +38,7 @@ function createShell(car) {
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
+  shell.size = SHELL_SIZE;
   WORLD.add(shell);
   return shell;
 }

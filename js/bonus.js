@@ -75,6 +75,7 @@ function bonus() {
       bonus.position.set(bonusX, bonusY, bonusZ);
       bonus.castShadow = true;
       bonus.shadowDarkness = 1.0;
+      bonus.size = BONUS_SIZE;
       WORLD.add(bonus);
       BONUSES.push(bonus);
       activeBonuses.push(bonus);
@@ -87,13 +88,13 @@ function bonus() {
 function clearBonuses() {
   for (var i = 0; i < activeBonuses.length; i++) {
     WORLD.remove(activeBonuses[i]);
-    BONUSES.slice(i, 1);
+    BONUSES.splice(i, 1);
   }
 }
 
 function removeBonus(index) {
   WORLD.remove(BONUSES[index]);
-  BONUSES.slice(index, 1);
+  BONUSES.splice(index, 1);
 }
 
 function rotateBonus() {

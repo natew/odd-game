@@ -1,15 +1,15 @@
 function collisions() {
   carBonusCollision();
-  carShellCollision();
+  carShellWallCollision();
 }
 
-function carShellCollision() {
+function carShellWallCollision() {
   if (NUM_SHELLS) {
     var i, shell, x, y;
     for (i = 0; i < NUM_SHELLS; i++) {
       shell = SHELLS[i];
 
-      collisionDetect(shell, i);
+      collisionDetectShell(shell, i);
       moveShell(shell);
 
       if (++shell.timeElapsed > SHELL_DURATION) {
@@ -20,6 +20,13 @@ function carShellCollision() {
 }
 
 function carBonusCollision() {
+  if (BONUSES.length) {
+    var i, bonus;
+    for (i = 0; i < BONUSES.length; i++) {
+      bonus = BONUSES[i];
+      collisionDetectBonus(bonus);
+    }
+  }
 
 }
 
@@ -32,9 +39,9 @@ var rays = [
     caster = new THREE.Raycaster();
 
 // Detect collishs
-function collisionDetect(obj, index) {
+function collisionDetectShell(obj, index) {
   var collisions, i,
-      distance = SHELL_SIZE; // Maximum distance from origin to collide
+      distance = obj.size; // Maximum distance from origin to collide
 
   // For each ray
   for (i = 0; i < rays.length; i += 1) {
@@ -50,6 +57,24 @@ function collisionDetect(obj, index) {
 
     // CAR = EXPLODE
     carCollideShell(obj, caster, index);
+  }
+}
+
+function collisionDetectBonus(obj) {
+  var collisions, i,
+      distance = obj.size;
+
+  for (i = 0; i < rays.length; i += 1) {
+    caster.set(obj.position, rays[i]);
+    var j;
+    for (j = 0; j < NUM_CARS; j++) {
+      var car_collisions = caster.intersectObject( CARS[j] );
+
+      if (car_collisions.length && car_collisions[0].distance <= distance) {
+        console.log('pickup by', j);
+        removeBonus(obj);
+      }
+    }
   }
 }
 
