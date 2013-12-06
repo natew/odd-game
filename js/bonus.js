@@ -24,8 +24,8 @@ var b = {
   invincible: function(index) {
     INVINCIBLE[index] = true;
     setTimeout(function() {
-
-    })
+      INVINCIBLE[index] = false;
+    }, 10000);
   }
 };
 
@@ -40,7 +40,6 @@ BONUS_TYPES[1] = _.clone(bonus);
 BONUS_TYPES[1].run = function() {
   b.invincible(this.playerIndex);
 };
-
 
 // Start placing them on the board
 function startBonuses() {
