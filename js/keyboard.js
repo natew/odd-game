@@ -14,9 +14,11 @@ function keyEvents(moveDistance, rotateAngle) {
 $(window).keypress(function(e) {
   console.log(e.keyCode);
   if (e.keyCode == 49) {
+    activeCar = 0;
     playerAction(0);
   }
   else if (e.keyCode == 50) {
+    activeCar = 1;
     playerAction(1);
   }
 });

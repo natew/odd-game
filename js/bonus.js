@@ -24,8 +24,8 @@ var b = {
   invincible: function(index) {
     INVINCIBLE[index] = true;
     setTimeout(function() {
-
-    })
+      INVINCIBLE[index] = false;
+    }, 10000);
   }
 };
 
@@ -43,7 +43,7 @@ BONUS_TYPES[1].run = function() {
 
 //
 // Setup first bonuses
-givePlayerBonus(0, 0);
+// givePlayerBonus(0, 0);
 
 
 // Start placing them on the board
@@ -52,7 +52,7 @@ function startBonuses() {
   giveBonuses();
   setInterval(function() {
     giveBonuses();
-  }, 1000);
+  }, 10000);
 }
 
 // vars for placing bonuses
