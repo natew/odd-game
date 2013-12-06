@@ -7,18 +7,11 @@ function moveBackward(car, moveDistance) {
   car.position.z += moveDistance;
 }
 
-function shoot() {
-  var car = CARS[activeCar];
-  // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-  var shell = createShell(car);
-
-  shell.radians = (car.rotation.y) % (Math.PI * 2);
-  if (shell.radians < 0) shell.radians += Math.PI * 2;
-  // console.log(shell.radians * 180 / Math.PI);
-
-  shell.timeElapsed = 0;
-  SHELLS.push(shell);
-  NUM_SHELLS++;
+function playerAction(index) {
+  if (!PLAYER_BONUSES[index].length) return;
+  var bonus = PLAYER_BONUSES[index].shift();
+  console.log('do bonus', PLAYER_BONUSES[index])
+  bonus.run();
 }
 
 // 25 x, 18 y
