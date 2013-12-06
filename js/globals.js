@@ -20,7 +20,8 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     BONUS_TYPES = [],
     INVINCIBLE = [false, false],
     INVINCIBLE_DURATION = 1000 * 10,
-    SEEKING_DIFFICULTY = 18;
+    SEEKING_DIFFICULTY = 18,
+    PARTICLES = [];
 
 // Game items
 var WALLS = [],

@@ -56,6 +56,7 @@ function update() {
   var delta = clock.getDelta();
   var moveDistance = 200 * delta;
   var rotateAngle = Math.PI / 2 * delta * 2; // pi/2 radians (90 degrees) per second
+  var time = 4 * clock.getElapsedTime();
 
   moveCar();
   keyEvents(moveDistance, rotateAngle);
@@ -65,6 +66,7 @@ function update() {
   fadeBonus(delta);
   controls.update();
   stats.update();
+  particleAnimate(time);
 }
 
 function animate() {

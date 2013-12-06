@@ -182,7 +182,7 @@ function giveBonuses() {
       i, j,
       lastFoundAt = [0, 0];
 
-      console.log('give', numBonusToGive);
+      // console.log('give', numBonusToGive);
 
   // Loop through cars positions
   for (i = 0; i < numBonusToGive; i++) {
@@ -281,7 +281,18 @@ function givePlayerBonus(pIndex, bIndex) {
   // otherwise just push it onto their bonuses
   else {
     PLAYER_BONUSES[pIndex].push(newBonus);
+    showPlayerBonus(pIndex, newBonus);
   }
 
   removeBonus(bIndex);
+}
+
+function showPlayerBonus(pIndex, bonus) {
+  var car = CARS[pIndex];
+
+  car.add(bonus);
+  console.log(bonus);
+  // bonus.position.x = 100;
+  // bonus.position.y = 100;
+  // bonus.position.z = 100;
 }
