@@ -17,7 +17,7 @@ function createStars() {
   for ( i = 0; i < particleCount; i ++ ) {
     var vertex = new THREE.Vector3();
     vertex.x = Math.random() * 1000 - 500;
-    vertex.y = Math.random() * 1000 - 500;
+    vertex.y = -500 + Math.random() * 1000 - 500;
     vertex.z = Math.random() * 1000 - 500;
     particleGeometry.vertices.push( vertex );
   }
@@ -28,7 +28,9 @@ function createStars() {
 
 function createFloor() {
   var floorMaterial = new THREE.MeshPhongMaterial({
-    color:0xffffff
+    color:0xffffff,
+    transparent: true,
+    opacity: 0.3
   });
   var floorGeometry = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT);
   floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -75,13 +77,13 @@ function lighting() {
   var spotLight;
   // Point light
   spotLight = new THREE.SpotLight(colors['light'], 1.5);
-  spotLight.position.set(-300, 500, 200);
+  spotLight.position.set(0, -200, 0);
   spotLight.castShadow = true;
   spotLight.shadowDarkness = 0.6;
   // spotLight.shadowCameraVisible = true;
   spotLight.shadowCameraNear = 500;
   spotLight.shadowCameraFar = 4000;
-  WORLD.add(spotLight);
+  camera.add(spotLight);
 
 
   // Point light
@@ -95,7 +97,7 @@ function createCars() {
     var carMaterial = new THREE.MeshPhongMaterial({
       color: colors['car'],
       transparent: true,
-      opacity: 0
+      opacity: 0.2
     });
     var car = new THREE.Mesh(
       new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),

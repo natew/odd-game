@@ -74,7 +74,7 @@ function wallBounce(obj, wall_id) {
 }
 
 function carCollide(obj, caster, shellIndex) {
-  var i, distance = CAR_SIZE; // Distance from center of car to collide
+  var i, distance = CAR_SIZE / 2; // Distance from center of car to collide
   for (i = 0; i < NUM_CARS; i++) {
     var car_collisions = caster.intersectObject( CARS[i] );
 

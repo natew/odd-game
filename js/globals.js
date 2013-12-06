@@ -28,7 +28,7 @@ var clock = new THREE.Clock();
 var colors = {
   light: 0xFFFFFF,
   sky: 0x183759,
-  wall: 0x420505,
+  wall: 0xffffff,
   car: 0xd8d600,
   shell: 0xCC0000,
   bonus: 0x183759

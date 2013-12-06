@@ -3,7 +3,7 @@ var group, text, i;
 // Init
 for (i = 0; i < 2; i++) {
   var group = createScore(i, SCORES[i]);
-  WORLD.add( group );
+  camera.add( group );
   SCORE_TEXT.push( group );
 }
 
@@ -15,8 +15,8 @@ function createScore(index, write) {
   }
 
   var text3d = new THREE.TextGeometry( theText, {
-    size: 50,
-    height: 20,
+    size: 40,
+    height: 10,
     curveSegments: 2,
     weight: 'normal',
     font: "gamegirl classic"
@@ -30,14 +30,13 @@ function createScore(index, write) {
   text = new THREE.Mesh( text3d, textMaterial );
 
   if (i == 0)
-    text.position.x = -SCREEN_WIDTH / 2 + centerOffset + 135;
+    text.position.x = -250;
   else
-    text.position.x = SCREEN_WIDTH / 2 - centerOffset - 200;
+    text.position.x = 180;
 
-  text.position.y = 100;
-  text.position.z = SCREEN_HEIGHT / 2 - 100;
+  text.position.y = -120;
+  text.position.z = -400;
 
-  text.rotation.x = -Math.PI / 2;
   text.rotation.y = Math.PI * 2;
 
   group = new THREE.Object3D();
@@ -47,8 +46,8 @@ function createScore(index, write) {
 }
 
 function updateScore(index, score) {
-  WORLD.remove(SCORE_TEXT[index]);
+  camera.remove(SCORE_TEXT[index]);
   var score = createScore(index, score);
-  WORLD.add( score );
+  camera.add( score );
   SCORE_TEXT[index] = score;
 }
