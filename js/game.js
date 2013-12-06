@@ -68,6 +68,22 @@ function moveCar() {
   }
 }
 
+function moveShells() {
+  if (NUM_SHELLS) {
+    var i, shell, x, y;
+    for (i = 0; i < NUM_SHELLS; i++) {
+      shell = SHELLS[i];
+
+      collisionDetectShell(shell, i);
+      moveShell(shell);
+
+      if (++shell.timeElapsed > SHELL_DURATION) {
+        removeShell(i);
+      }
+    }
+  }
+}
+
 function moveShell(shell) {
   dist = SHELL_SPEED;
   x = dist * Math.cos(shell.radians);

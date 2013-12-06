@@ -60,6 +60,7 @@ function update() {
   moveCar();
   keyEvents(moveDistance, rotateAngle);
   collisions();
+  moveShells();
   rotateBonus();
   fadeBonus(delta);
   controls.update();

@@ -1,22 +1,5 @@
 function collisions() {
   carBonusCollision();
-  carShellWallCollision();
-}
-
-function carShellWallCollision() {
-  if (NUM_SHELLS) {
-    var i, shell, x, y;
-    for (i = 0; i < NUM_SHELLS; i++) {
-      shell = SHELLS[i];
-
-      collisionDetectShell(shell, i);
-      moveShell(shell);
-
-      if (++shell.timeElapsed > SHELL_DURATION) {
-        removeShell(i);
-      }
-    }
-  }
 }
 
 function carBonusCollision() {
