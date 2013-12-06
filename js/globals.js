@@ -12,7 +12,10 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     BONUS_SIZE = 30,
     DATA = [],
     DATA_PREV = [],
-    SCORES = [3, 3];
+    SCORES = [3, 3],
+    PLAYER_BONUSES = [[], []],
+    BONUS_TYPES = [],
+    NUM_BONUSES;
 
 // Game items
 var WALLS = [],

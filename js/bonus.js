@@ -1,11 +1,34 @@
+var bonus = {
+  playerIndex: 0,
+  run: function() {}
+};
+
+// BONUSES
+
+// SHELL
+BONUS_TYPES[0] = _.clone(bonus);
+BONUS_TYPES[0].run = function() {
+  shoot(this.playerIndex);
+};
+
+// Set number of bonuses
+NUM_BONUSES = BONUS_TYPES.length;
+
+//
+// Setup first bonuses
+givePlayerBonus(0, 0);
+
+
+// Start placing them on the board
 function startBonuses() {
   // Bonuses appear every so often
-  bonus();
+  giveBonuses();
   setInterval(function() {
-    bonus();
+    giveBonuses();
   }, 10000);
 }
 
+// vars for placing bonuses
 var activeBonuses = [],
     i,
     xBonuses = [],
@@ -33,7 +56,7 @@ var bonusMaterial = new THREE.MeshPhongMaterial({
     bonusGeometry = new THREE.CubeGeometry(BONUS_SIZE, BONUS_SIZE, BONUS_SIZE, 1, 1, 1);
 
 // Drop a bonus on the board!
-function bonus() {
+function giveBonuses() {
   clearBonuses();
   shuffleBonuses();
 
@@ -102,4 +125,8 @@ function rotateBonus() {
     var bonus = activeBonuses[i];
     bonus.rotateOnAxis( xAxis, Math.PI / 180 );
   }
+}
+
+function givePlayerBonus(pIndex, bIndex) {
+  PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bIndex]));
 }

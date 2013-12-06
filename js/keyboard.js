@@ -12,7 +12,11 @@ function keyEvents(moveDistance, rotateAngle) {
 
 // Shoot keycode
 $(window).keypress(function(e) {
-  if (e.keyCode == 32) {
-    shoot();
+  console.log(e.keyCode);
+  if (e.keyCode == 49) {
+    playerAction(0);
+  }
+  else if (e.keyCode == 50) {
+    playerAction(1);
   }
 });

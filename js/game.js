@@ -7,8 +7,15 @@ function moveBackward(car, moveDistance) {
   car.position.z += moveDistance;
 }
 
-function shoot() {
-  var car = CARS[activeCar];
+function playerAction(index) {
+  if (!PLAYER_BONUSES[index].length) return;
+  var bonus = PLAYER_BONUSES[index].shift();
+  console.log('do bonus', PLAYER_BONUSES[index])
+  bonus.run();
+}
+
+function shoot(index) {
+  var car = CARS[index];
   // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
   var shell = createShell(car);
 
