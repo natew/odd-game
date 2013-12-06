@@ -14,20 +14,6 @@ function playerAction(index) {
   bonus.run();
 }
 
-function shoot(index) {
-  var car = CARS[index];
-  // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-  var shell = createShell(car);
-
-  shell.radians = (car.rotation.y) % (Math.PI * 2);
-  if (shell.radians < 0) shell.radians += Math.PI * 2;
-  // console.log(shell.radians * 180 / Math.PI);
-
-  shell.timeElapsed = 0;
-  SHELLS.push(shell);
-  NUM_SHELLS++;
-}
-
 // 25 x, 18 y
 var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);

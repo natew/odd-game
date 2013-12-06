@@ -15,7 +15,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     SCORES = [3, 3],
     PLAYER_BONUSES = [[], []],
     BONUS_TYPES = [],
-    NUM_BONUSES;
+    INVINCIBLE = [false, false];
 
 // Game items
 var WALLS = [],
