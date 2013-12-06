@@ -9,7 +9,7 @@ var b = {
   shoot: function(index) {
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE);
+    var shell = createShell(car, SHELL_SIZE, 0);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -31,7 +31,7 @@ var b = {
   bigShoot: function(index) {
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, BIG_SHELL_SIZE);
+    var shell = createShell(car, BIG_SHELL_SIZE, 0);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -40,6 +40,21 @@ var b = {
     shell.timeElapsed = 0;
     SHELLS.push(shell);
     NUM_SHELLS++;
+  },
+  triShoot: function(index) {
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    for (var i = -Math.PI / 4; i <= Math.PI / 4; i += Math.PI / 4) {
+      var shell = createShell(car, BIG_SHELL_SIZE, 0);
+
+      shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
+      if (shell.radians < 0) shell.radians += Math.PI * 2;
+      // console.log(shell.radians * 180 / Math.PI);
+
+      shell.timeElapsed = 0;
+      SHELLS.push(shell);
+      NUM_SHELLS++;
+    }
   }
 };
 
@@ -58,7 +73,12 @@ BONUS_TYPES[1].run = function() {
 // BIG SHELL
 BONUS_TYPES[2] = _.clone(bonus);
 BONUS_TYPES[2].run = function() {
-  b.bigShoot(this.playerIndex);
+  b.bigShoot(index);
+}
+
+BONUS_TYPES[3] = _.clone(bonus);
+BONUS_TYPES[3].run = function() {
+  b.triShoot(index);
 }
 
 // Start placing them on the board
