@@ -24,7 +24,7 @@ function carBonusCollision() {
     var i, bonus;
     for (i = 0; i < BONUSES.length; i++) {
       bonus = BONUSES[i];
-      collisionDetectBonus(bonus);
+      collisionDetectBonus(bonus, i);
     }
   }
 
@@ -60,7 +60,7 @@ function collisionDetectShell(obj, index) {
   }
 }
 
-function collisionDetectBonus(obj) {
+function collisionDetectBonus(obj, index) {
   var collisions, i,
       distance = obj.size;
 
@@ -72,7 +72,7 @@ function collisionDetectBonus(obj) {
 
       if (car_collisions.length && car_collisions[0].distance <= distance) {
         console.log('pickup by', j);
-        removeBonus(obj);
+        givePlayerBonus(j, index);
       }
     }
   }

@@ -126,6 +126,7 @@ function giveBonuses() {
       bonus.castShadow = true;
       bonus.shadowDarkness = 1.0;
       bonus.size = BONUS_SIZE;
+      bonus.typeIndex = 0;
       WORLD.add(bonus);
       BONUSES.push(bonus);
       activeBonuses.push(bonus);
@@ -156,5 +157,7 @@ function rotateBonus() {
 }
 
 function givePlayerBonus(pIndex, bIndex) {
-  PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bIndex]));
+  var bonusTypeIndex = BONUSES[bIndex].typeIndex;
+  PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bonusTypeIndex]));
+  removeBonus(bIndex);
 }
