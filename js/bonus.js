@@ -52,12 +52,11 @@ function startBonuses() {
   giveBonuses();
   setInterval(function() {
     giveBonuses();
-  }, 10000);
+  }, 1000);
 }
 
 // vars for placing bonuses
-var activeBonuses = [],
-    i,
+var i,
     xBonuses = [],
     yBonuses = [],
     TOTAL_BONUSES = 20,
@@ -129,7 +128,6 @@ function giveBonuses() {
       bonus.typeIndex = 0;
       WORLD.add(bonus);
       BONUSES.push(bonus);
-      activeBonuses.push(bonus);
 
       if (++given == givePerTurn) return;
     }
@@ -137,21 +135,23 @@ function giveBonuses() {
 }
 
 function clearBonuses() {
-  for (var i = 0; i < activeBonuses.length; i++) {
-    WORLD.remove(activeBonuses[i]);
-    BONUSES.splice(i, 1);
-  }
+  console.log(BONUSES.length)
+  _.each(BONUSES, function(bonus) {
+    WORLD.remove(bonus);
+  });
+  BONUSES = [];
 }
 
 function removeBonus(index) {
+  console.log(BONUSES[index]);
   WORLD.remove(BONUSES[index]);
   BONUSES.splice(index, 1);
 }
 
 function rotateBonus() {
   var xAxis = new THREE.Vector3(0,0,1);
-  for (var i = 0; i < activeBonuses.length; i++) {
-    var bonus = activeBonuses[i];
+  for (var i = 0; i < BONUSES.length; i++) {
+    var bonus = BONUSES[i];
     bonus.rotateOnAxis( xAxis, Math.PI / 180 );
   }
 }
