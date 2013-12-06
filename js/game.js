@@ -25,14 +25,16 @@ function playerAction(index) {
 }
 
 // 25 x, 18 y
-var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
-    shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
+// var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+//     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
-function createShell(car) {
+function createShell(car, shellSize) {
+  var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+      shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
   var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
       carAngle = car.rotation.y + (Math.PI / 2),
-      shellX = 80 * Math.sin(carAngle),
-      shellZ = 80 * Math.cos(carAngle);
+      shellX = (80 + shellSize / 2) * Math.sin(carAngle),
+      shellZ = (80 + shellSize / 2) * Math.cos(carAngle);
 
   shell.position.set(car.position.x + shellX, car.position.y, car.position.z + shellZ);
   shell.fromCar = car.index;
@@ -41,7 +43,7 @@ function createShell(car) {
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
-  shell.size = SHELL_SIZE;
+  shell.size = shellSize;
   WORLD.add(shell);
   return shell;
 }

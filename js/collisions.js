@@ -112,7 +112,7 @@ function carCollideShell(obj, caster, shellIndex) {
   for (i = 0; i < NUM_CARS; i++) {
     var car_collisions = caster.intersectObject( CARS[i] );
 
-    if (car_collisions.length && car_collisions[0].distance <= distance && obj.fromCar != i && !INVINCIBLE[i]) {
+    if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[i]) {
       carExplode(i);
       removeShell(shellIndex);
     }

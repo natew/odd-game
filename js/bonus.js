@@ -3,14 +3,14 @@ var bonus = {
   run: function() {}
 };
 
-var invincibleTimeout
+var invincibleTimeout;
 
 // BONUSES
 var b = {
   shoot: function(index) {
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car);
+    var shell = createShell(car, SHELL_SIZE);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -23,9 +23,24 @@ var b = {
 
   invincible: function(index) {
     INVINCIBLE[index] = true;
-    setTimeout(function() {
+    clearTimeout(invincibleTimeout);
+    invincibleTimeout = setTimeout(function() {
       INVINCIBLE[index] = false;
-    }, 10000);
+    }, 20000);
+  },
+
+  bigShoot: function(index) {
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    var shell = createShell(car, BIG_SHELL_SIZE);
+
+    shell.radians = (car.rotation.y) % (Math.PI * 2);
+    if (shell.radians < 0) shell.radians += Math.PI * 2;
+    // console.log(shell.radians * 180 / Math.PI);
+
+    shell.timeElapsed = 0;
+    SHELLS.push(shell);
+    NUM_SHELLS++;
   }
 };
 
@@ -40,6 +55,12 @@ BONUS_TYPES[1] = _.clone(bonus);
 BONUS_TYPES[1].run = function() {
   b.invincible(this.playerIndex);
 };
+
+// BIG SHELL
+BONUS_TYPES[2] = _.clone(bonus);
+BONUS_TYPES[2].run = function() {
+  b.bigShoot(this.playerIndex);
+}
 
 // Start placing them on the board
 function startBonuses() {
@@ -121,7 +142,7 @@ function giveBonuses() {
       bonus.shadowDarkness = 1.0;
       bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
-      bonus.typeIndex = 0;
+      bonus.typeIndex = 2;
       WORLD.add(bonus);
       BONUSES.push(bonus);
 
