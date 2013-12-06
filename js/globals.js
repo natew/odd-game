@@ -36,6 +36,7 @@ var colors = {
   sky: 0x183759,
   wall: 0xffffff,
   car: 0xd8d600,
+  car2: 0x2f70ff,
   shell: 0xCC0000,
   bonus: 0x183759
 }

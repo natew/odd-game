@@ -21,7 +21,7 @@ function playerAction(index) {
   if (!PLAYER_BONUSES[index].length) return;
   var bonus = PLAYER_BONUSES[index].shift();
   console.log('do bonus', PLAYER_BONUSES[index])
-  bonus.run();
+  bonus.run(index);
 }
 
 // 25 x, 18 y
