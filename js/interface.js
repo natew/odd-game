@@ -32,7 +32,7 @@ function createScore(index, write) {
   text = new THREE.Mesh( text3d, textMaterial );
 
   if (index == 0)
-    text.position.x = -250;
+    text.position.x = -230;
   else
     text.position.x = 180;
 
