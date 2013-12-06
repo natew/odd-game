@@ -55,7 +55,7 @@ function init() {
 function update() {
   var delta = clock.getDelta();
   var moveDistance = 200 * delta;
-  var rotateAngle = Math.PI / 2 * delta; // pi/2 radians (90 degrees) per second
+  var rotateAngle = Math.PI / 2 * delta * 2; // pi/2 radians (90 degrees) per second
 
   moveCar();
   keyEvents(moveDistance, rotateAngle);

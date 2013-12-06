@@ -1,10 +1,20 @@
 
 function moveForward(car, moveDistance) {
-  car.position.z -= moveDistance;
+  var carAngle = car.rotation.y + (Math.PI / 2),
+      moveX = 80 * Math.sin(carAngle),
+      moveY = 80 * Math.cos(carAngle);
+
+  car.position.x += moveX * MOVE_SPEED;
+  car.position.z += moveY * MOVE_SPEED;
 }
 
 function moveBackward(car, moveDistance) {
-  car.position.z += moveDistance;
+  var carAngle = car.rotation.y + (Math.PI / 2),
+      moveX = 80 * Math.sin(carAngle),
+      moveY = 80 * Math.cos(carAngle);
+
+  car.position.x -= moveX * MOVE_SPEED;
+  car.position.z -= moveY * MOVE_SPEED;
 }
 
 function playerAction(index) {
