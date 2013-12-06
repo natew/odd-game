@@ -32,7 +32,8 @@ var WALLS = [],
     SHELLS = [],
     BANANAS = [],
     activeCar = 0,
-    SCORE_TEXT = [];
+    SCORE_TEXT = [],
+    CAR_PARTICLES = [];
 
 var keyboard = new THREEx.KeyboardState();
 var clock = new THREE.Clock();

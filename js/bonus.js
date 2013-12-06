@@ -28,26 +28,18 @@ var b = {
     // console.log("invincible");
     INVINCIBLE[index] = true;
 
-    if (cloak) removeCloak();
-
-    cloak = new THREE.Mesh(
-      new THREE.SphereGeometry(60, 60, 60),
-      new THREE.MeshPhongMaterial({
-        transparent: true,
-        opacity: 0.3
-      })
-    );
-    CARS[index].add(cloak);
+    if (CAR_PARTICLES[index]) removeParticles(index);
+    createParticles(index);
 
     clearTimeout(invincibleTimeout);
     invincibleTimeout = setTimeout(function() {
       INVINCIBLE[index] = false;
-      removeCloak();
+      removeParticles(index);
     }, INVINCIBLE_DURATION);
 
     function removeCloak() {
-      CARS[index].remove(cloak);
-      cloak = null;
+      removeParticles(index);
+      CAR_PARTICLES[index] = null;
     }
   },
 
@@ -111,7 +103,7 @@ BONUS_TYPES[0].run = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 3;
+BONUS_TYPES[1].rarity = 4;
 BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
