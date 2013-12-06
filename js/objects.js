@@ -75,7 +75,7 @@ function createWalls() {
 
 function lighting() {
   var spotLight;
-  // Point light
+  // Spot light
   spotLight = new THREE.SpotLight(colors['light'], 1.5);
   spotLight.position.set(0, -200, 0);
   spotLight.castShadow = true;
@@ -85,10 +85,19 @@ function lighting() {
   spotLight.shadowCameraFar = 4000;
   camera.add(spotLight);
 
-
-  // Point light
-  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 1.0);
+  // Hemisphere light
+  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 0.6);
   WORLD.add(light2);
+
+  // Point
+  // var light3 = new THREE.PointLight(0xffe849, 20, 300);
+  // light3.position.set(0, 100, 200);
+  // WORLD.add(light3);
+
+  // // Point
+  // var light4 = new THREE.PointLight(0xffe849, 20, 300);
+  // light4.position.set(50, -100, -100);
+  // WORLD.add(light4);
 }
 
 function createCars() {
