@@ -106,7 +106,8 @@ BONUS_TYPES[0].run = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 3000;
+BONUS_TYPES[1].rarity = 3;
+BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
 };
@@ -269,8 +270,18 @@ function fadeBonus(delta) {
 }
 
 function givePlayerBonus(pIndex, bIndex) {
-  var bonusTypeIndex = BONUSES[bIndex].typeIndex;
-  PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bonusTypeIndex]));
-  console.log(PLAYER_BONUSES[pIndex]);
+  var bonusTypeIndex = BONUSES[bIndex].typeIndex,
+      newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);
+
+  // If we want it to instantly activate the bonus
+  if (newBonus.instaGive) {
+    newBonus.run(pIndex);
+  }
+
+  // otherwise just push it onto their bonuses
+  else {
+    PLAYER_BONUSES[pIndex].push(newBonus);
+  }
+
   removeBonus(bIndex);
 }
