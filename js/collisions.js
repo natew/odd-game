@@ -25,7 +25,7 @@ var rays = [
 // Detect collishs
 function collisionDetect(obj, index) {
   var collisions, i,
-      distance = 25; // Maximum distance from origin to collide
+      distance = SHELL_SIZE; // Maximum distance from origin to collide
 
   // For each ray
   for (i = 0; i < rays.length; i += 1) {
@@ -74,7 +74,7 @@ function wallBounce(obj, wall_id) {
 }
 
 function carCollide(obj, caster, shellIndex) {
-  var i, distance = 45; // Distance from center of car to collide
+  var i, distance = CAR_SIZE; // Distance from center of car to collide
   for (i = 0; i < NUM_CARS; i++) {
     var car_collisions = caster.intersectObject( CARS[i] );
 

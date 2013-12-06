@@ -1,6 +1,3 @@
-// 25 x, 18 y
-var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
-    shellGeometry = new THREE.CubeGeometry(30, 30, 30, 1, 1, 1);
 
 function moveForward(car, moveDistance) {
   car.position.z -= moveDistance;
@@ -24,6 +21,10 @@ function shoot() {
   NUM_SHELLS++;
 }
 
+// 25 x, 18 y
+var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+    shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
+
 function createShell(car) {
   var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
       carAngle = car.rotation.y + (Math.PI / 2),
@@ -35,6 +36,8 @@ function createShell(car) {
   // shell.geometry.dynamic = true;
   // shell.geometry.verticesNeedUpdate = true;
   // shell.geometry.normalsNeedUpdate = true;
+  shell.castShadow = true;
+  shell.shadowDarkness = 0.5;
   WORLD.add(shell);
   return shell;
 }
@@ -70,6 +73,7 @@ function moveShell(shell) {
 
 function removeShell(index) {
   WORLD.remove(SHELLS[index]);
+  // renderer.deallocateObject(SHELLS[index]);
   SHELLS.splice(index, 1);
   NUM_SHELLS--;
 }

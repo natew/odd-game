@@ -5,8 +5,11 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     WORLD = new THREE.Object3D(),
     NUM_CARS = 2,
     NUM_SHELLS = 0,
+    CAR_SIZE = 40,
     SHELL_SPEED = 8,
     SHELL_DURATION = 300,
+    SHELL_SIZE = 15,
+    BONUS_SIZE = 30,
     DATA = [],
     DATA_PREV = [],
     SCORES = [3, 3];
@@ -27,5 +30,6 @@ var colors = {
   sky: 0x183759,
   wall: 0x420505,
   car: 0xd8d600,
-  shell: 0xCC0000
+  shell: 0xCC0000,
+  bonus: 0x183759
 }

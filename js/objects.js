@@ -27,11 +27,14 @@ function createStars() {
 }
 
 function createFloor() {
-  var floorMaterial = new THREE.MeshLambertMaterial({ color:0xffffff });
+  var floorMaterial = new THREE.MeshPhongMaterial({
+    color:0xffffff
+  });
   var floorGeometry = new THREE.PlaneGeometry(SCREEN_WIDTH, SCREEN_HEIGHT);
   floor = new THREE.Mesh(floorGeometry, floorMaterial);
   // floor.position.y = -0.5;
   floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
   WORLD.add(floor);
 }
 
@@ -43,39 +46,8 @@ function createSky() {
 }
 
 function createWalls() {
-  // var i;
-  // var wallLengthH = SCREEN_WIDTH,
-  //     wallLengthV = SCREEN_HEIGHT,
-  //     wallPosH = wallLengthH / 2,
-  //     wallPosV = wallLengthV / 2,
-  //     wallWidth = 20,
-  //     wallHeight = 40;
-
-  // var wallWidths = [wallLengthH, wallLengthH, wallWidth, wallWidth];
-  // var wallLengths = [wallWidth, wallWidth, wallLengthV, wallLengthV];
-  // var wallX = [0, 0, wallPosH, -wallPosH];
-  // var wallZ = [wallPosV, -wallPosV, 0, 0];
-  // var wall;
-
-  // for (i = 0; i < 4; i++) {
-  //   wall = new THREE.Mesh(
-  //       new THREE.CubeGeometry(wallWidths[i], wallHeight, wallLengths[i], 1, 1, 1),
-  //       new THREE.MeshPhongMaterial( { color: colors['wall'] } )
-  //     );
-  //   wall.position.set(wallX[i], wallHeight / 2, wallZ[i]);
-  //   wall.castShadow = true;
-  //   wall.receiveShadow = true;
-  //   WALLS.push(wall);
-  //   WORLD.add(wall);
-  // }
-
-  // Swap walls into nice order this is CRAP
-  // var b = WALLS[3];
-  // WALLS[3] = WALLS[0];
-  // WALLS[0] = b;
-
   var material = new THREE.MeshLambertMaterial( { color: colors['wall'] } ),
-      height = 128,
+      height = 40,
       w = [
         new THREE.PlaneGeometry(floor.geometry.height, height),
         new THREE.PlaneGeometry(floor.geometry.width, height),
@@ -102,16 +74,20 @@ function createWalls() {
 function lighting() {
   var spotLight;
   // Point light
-  spotLight = new THREE.SpotLight(colors['light'], 5.0);
-  spotLight.position.set(0, 1500, 0);
+  spotLight = new THREE.SpotLight(colors['light'], 1.5);
+  spotLight.position.set(50, 500, 300);
   spotLight.castShadow = true;
-  // spotLight.shadowCameraVisible = true;
-  spotLight.shadowMapWidth = 1024 * 2;
-  spotLight.shadowMapHeight = 1024 * 2;
+  spotLight.shadowDarkness = 0.5;
+  spotLight.shadowCameraVisible = true;
   spotLight.shadowCameraNear = 500;
   spotLight.shadowCameraFar = 4000;
-  spotLight.shadowCameraFov = 30;
+  spotLight.shadowCameraFov = 80;
   WORLD.add(spotLight);
+
+
+  // Point light
+  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 1.0);
+  WORLD.add(light2);
 }
 
 function createCars() {
@@ -119,13 +95,14 @@ function createCars() {
   for (i = 0; i < 2; i++) {
     var carMaterial = new THREE.MeshPhongMaterial( { color: colors['car'] } );
     var car = new THREE.Mesh(
-      new THREE.CubeGeometry(80, 50, 50, 1, 1, 1),
+      new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),
       carMaterial );
     var half_screen = SCREEN_WIDTH / 2;
     car.position.set((half_screen * i) - (half_screen/2), 25, 0);
     car.index = i;
     car.castShadow = true;
     car.receiveShadow = true;
+    car.shadowDarkness = 0.5;
     WORLD.add(car);
     CARS.push(car);
   }

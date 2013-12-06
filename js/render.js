@@ -49,6 +49,7 @@ function init() {
   createCars();
   lighting();
   loadObjects();
+  startBonuses();
 }
 
 function update() {
