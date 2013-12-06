@@ -178,7 +178,6 @@ function carExplode(index) {
   }
 }
 
-
 function doIntro() {
   showBanner('READY');
 

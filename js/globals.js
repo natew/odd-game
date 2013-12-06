@@ -24,7 +24,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     SEEKING_DIFFICULTY = 18,
     PARTICLES = [],
     INTRO_LENGTH = 2.5, // seconds
-    DO_INTRO = true,
+    DO_INTRO = false,
     GAME_OVER = false,
     BONUS_INTERVAL,
     MAX_BONUS_PER_CYCLE = 5;

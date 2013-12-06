@@ -66,7 +66,7 @@ function update() {
 
   if (!GAME_OVER) {
     // Disable keys until intro over
-    if (DO_INTRO && time > INTRO_LENGTH) {
+    if (DO_INTRO && time > INTRO_LENGTH || !DO_INTRO) {
       keyEvents(moveDistance, rotateAngle);
     }
 
