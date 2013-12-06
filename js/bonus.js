@@ -4,6 +4,7 @@ var bonus = {
 };
 
 var invincibleTimeout;
+var cloak;
 
 // BONUSES
 var b = {
@@ -25,11 +26,29 @@ var b = {
   invincible: function(index) {
     console.log("invincible");
     INVINCIBLE[index] = true;
+
+    if (cloak) removeCloak();
+
+    cloak = new THREE.Mesh(
+      new THREE.SphereGeometry(60, 60, 60),
+      new THREE.MeshPhongMaterial({
+        transparent: true,
+        opacity: 0.3
+      })
+    );
+    CARS[index].add(cloak);
+
     clearTimeout(invincibleTimeout);
     invincibleTimeout = setTimeout(function() {
       INVINCIBLE[index] = false;
+      removeCloak();
       console.log('UNINVINCIBLE')
     }, 5000);
+
+    function removeCloak() {
+      CARS[index].remove(cloak);
+      cloak = null;
+    }
   },
 
   bigShoot: function(index) {
