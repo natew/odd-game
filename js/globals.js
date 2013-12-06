@@ -19,6 +19,7 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     PLAYER_BONUSES = [[], []],
     BONUS_TYPES = [],
     INVINCIBLE = [false, false],
+    INVINCIBLE_DURATION = 1000 * 10,
     SEEKING_DIFFICULTY = 18;
 
 // Game items
