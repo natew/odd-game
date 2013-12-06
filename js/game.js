@@ -52,7 +52,7 @@ function createShell(car, shellSize, attributes) {
 
 function createBanana(car, bananaSize) {
   var bananaMaterial = new THREE.MeshLambertMaterial({ color: colors['banana'] }),
-      bananaGeometry = new THREE.CubeGeometry(bananaSize, bananaSize, bananaSize, 1, 1, 1);  
+      bananaGeometry = new THREE.CubeGeometry(bananaSize, bananaSize, bananaSize, 1, 1, 1);
 
   var banana = new THREE.Mesh(bananaGeometry, bananaMaterial),
       carAngle = car.rotation.y + (Math.PI / 2),
@@ -107,7 +107,7 @@ function moveShell(shell) {
   dist = SHELL_SPEED;
   // console.log(shell.seeking);
   if (shell.seeking) {
-    var toCarIndex = 1 - shell.fromCar;  
+    var toCarIndex = 1 - shell.fromCar;
     var oppCar = CARS[toCarIndex];
     var dY = oppCar.position.z - shell.position.z;
     var dX = oppCar.position.x - shell.position.x;
@@ -126,8 +126,8 @@ function moveShell(shell) {
     //   // shell.radians += dTheta / 2;
     // }
     // else {
-    //   shell.radians = -1 * Math.atan2(dY, dX); 
-      
+    //   shell.radians = -1 * Math.atan2(dY, dX);
+
     // }
     // shell.radians += (dTheta / 100) % (Math.PI * 2);
     // console.log(distToOpp, dTheta);
@@ -172,6 +172,25 @@ function carExplode(index) {
   updateScore(index, player_score);
 
   if (player_score == 0) {
-    alert('game over!!!!!!!');
+    showBanner("" + (1 - index + 1) + ' WINS!');
+    GAME_OVER = true;
+    clearInterval(BONUS_INTERVAL);
   }
+}
+
+
+function doIntro() {
+  showBanner('READY');
+
+  setTimeout(function() {
+    showBanner('SET');
+  }, 1000);
+
+  setTimeout(function() {
+    showBanner('GO!');
+  }, 2000);
+
+  setTimeout(function() {
+    removeBanner();
+  }, 3000);
 }

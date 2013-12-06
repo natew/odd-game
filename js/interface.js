@@ -1,10 +1,12 @@
 var group, text, i;
 
 // Init
-for (i = 0; i < 2; i++) {
-  var group = createScore(i, SCORES[i]);
-  camera.add( group );
-  SCORE_TEXT.push( group );
+function initInterface() {
+  for (i = 0; i < 2; i++) {
+    var group = createScore(i, SCORES[i]);
+    camera.add( group );
+    SCORE_TEXT.push( group );
+  }
 }
 
 function createScore(index, write) {
@@ -50,4 +52,38 @@ function updateScore(index, score) {
   var score = createScore(index, score);
   camera.add( score );
   SCORE_TEXT[index] = score;
+}
+
+var activeBanner;
+function showBanner(text) {
+  removeBanner();
+
+  var hash = document.location.hash.substr( 1 );
+  if ( hash.length !== 0 ) text = hash;
+
+  var text3d = new THREE.TextGeometry( text, {
+    size: 40,
+    height: 10,
+    curveSegments: 2,
+    weight: 'normal',
+    font: "gamegirl classic"
+  });
+
+  text3d.computeBoundingBox();
+  // text3d.computeVertexNormals();
+  var centerOffset = -0.5 * ( text3d.boundingBox.max.x - text3d.boundingBox.min.x );
+
+  var textMaterial = new THREE.MeshLambertMaterial( { color: 0xff36d5, overdraw: true } );
+  text = new THREE.Mesh( text3d, textMaterial );
+
+  text.rotation.y = Math.PI * 2;
+  text.position.z = -300;
+  text.position.x += centerOffset;
+
+  activeBanner = text;
+  camera.add(text);
+}
+
+function removeBanner() {
+  if (activeBanner) camera.remove(activeBanner);
 }

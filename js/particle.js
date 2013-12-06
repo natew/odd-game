@@ -4,7 +4,7 @@ var particleGroup = [],
     numActive = 0;
 
 function createParticles(carIndex) {
-  var totalParticles = 200;
+  var totalParticles = 20;
   var radiusRange = 50;
 
   particleAttributes[carIndex] = { startSize: [], startPosition: [], randomness: [] };

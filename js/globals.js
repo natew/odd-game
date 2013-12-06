@@ -20,9 +20,13 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     PLAYER_BONUSES = [[], []],
     BONUS_TYPES = [],
     INVINCIBLE = [false, false],
-    INVINCIBLE_DURATION = 1000 * 10,
+    INVINCIBLE_DURATION = 1000 * 7,
     SEEKING_DIFFICULTY = 18,
-    PARTICLES = [];
+    PARTICLES = [],
+    INTRO_LENGTH = 2.5, // seconds
+    DO_INTRO = true,
+    GAME_OVER = false,
+    BONUS_INTERVAL;
 
 // Game items
 var WALLS = [],
@@ -43,8 +47,8 @@ var colors = {
   sky: 0x183759,
   wall: 0xffffff,
   car: 0xd8d600,
-  car2: 0x2f70ff,
+  car2: 0x1b4299,
   shell: 0xCC0000,
-  bonus: 0x183759,
+  bonus: 0x7393ff,
   banana: 0xFFFF00
 }

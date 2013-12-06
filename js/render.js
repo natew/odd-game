@@ -49,24 +49,36 @@ function init() {
   createCars();
   lighting();
   loadObjects();
-  startBonuses();
+  initInterface();
+
+  setTimeout(function() {
+    startBonuses();
+  }, DO_INTRO ? INTRO_LENGTH * 1000 + 1000 : 0);
+
+  if (DO_INTRO) doIntro();
 }
 
 function update() {
   var delta = clock.getDelta();
   var moveDistance = 200 * delta;
   var rotateAngle = Math.PI / 2 * delta * 2; // pi/2 radians (90 degrees) per second
-  var time = 4 * clock.getElapsedTime();
+  var time = clock.getElapsedTime();
 
-  moveCar();
-  keyEvents(moveDistance, rotateAngle);
-  collisions();
-  moveShells();
-  rotateBonus();
-  fadeBonus(delta);
-  controls.update();
-  stats.update();
-  particleAnimate(time);
+  if (!GAME_OVER) {
+    // Disable keys until intro over
+    if (DO_INTRO && time > INTRO_LENGTH) {
+      keyEvents(moveDistance, rotateAngle);
+    }
+
+    moveCar();
+    collisions();
+    moveShells();
+    rotateBonus();
+    fadeBonus(delta);
+    controls.update();
+    stats.update();
+    particleAnimate(time);
+  }
 }
 
 function animate() {

@@ -76,7 +76,7 @@ function createWalls() {
 function lighting() {
   var spotLight;
   // Spot light
-  spotLight = new THREE.SpotLight(colors['light'], 1.5);
+  spotLight = new THREE.SpotLight(colors['light'], 1.8);
   spotLight.position.set(0, -200, 0);
   spotLight.castShadow = true;
   spotLight.shadowDarkness = 0.6;
@@ -86,7 +86,7 @@ function lighting() {
   camera.add(spotLight);
 
   // Hemisphere light
-  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 0.6);
+  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 1.0);
   WORLD.add(light2);
 
   // Point

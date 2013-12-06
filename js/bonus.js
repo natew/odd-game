@@ -119,7 +119,7 @@ BONUS_TYPES[0].run = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 4;
+BONUS_TYPES[1].rarity = 5;
 BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
@@ -132,24 +132,28 @@ BONUS_TYPES[2].run = function(index) {
   b.bigShoot(index);
 };
 
+// TRI SHOOT
 BONUS_TYPES[3] = _.clone(bonus);
 BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
 };
 
+// Seeking shoot
 BONUS_TYPES[4] = _.clone(bonus);
 BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
 };
 
+// Pulse shoot
 BONUS_TYPES[4] = _.clone(bonus);
 BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.pulseShoot(index);
 };
 
+// Banana
 BONUS_TYPES[5] = _.clone(bonus);
 BONUS_TYPES[5].rarity = 7;
 BONUS_TYPES[5].run = function(index) {
@@ -160,7 +164,7 @@ BONUS_TYPES[5].run = function(index) {
 function startBonuses() {
   // Bonuses appear every so often
   giveBonuses();
-  setInterval(function() {
+  BONUS_INTERVAL = setInterval(function() {
     giveBonuses();
   }, BONUS_DURATION);
 }
