@@ -95,15 +95,20 @@ function createCars() {
   var i;
   for (i = 0; i < 2; i++) {
     var carMaterial = new THREE.MeshPhongMaterial({
-      color: colors['car'],
+      color: i ? colors['car2'] : colors['car'],
       transparent: true,
-      opacity: 0.2
+      opacity: 1.0
     });
     var car = new THREE.Mesh(
       new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),
       carMaterial );
     var half_screen = SCREEN_WIDTH / 2;
     car.position.set((half_screen * i) - (half_screen/2), 25, 0);
+
+    if (i == 1) {
+      car.rotation.y += Math.PI / 2 * 2;
+    }
+
     car.index = i;
     car.castShadow = true;
     car.receiveShadow = true;

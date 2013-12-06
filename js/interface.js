@@ -29,7 +29,7 @@ function createScore(index, write) {
   var textMaterial = new THREE.MeshLambertMaterial( { color: 0xff36d5, overdraw: true } );
   text = new THREE.Mesh( text3d, textMaterial );
 
-  if (i == 0)
+  if (index == 0)
     text.position.x = -250;
   else
     text.position.x = 180;

@@ -1,5 +1,4 @@
 var bonus = {
-  playerIndex: 0,
   run: function() {}
 };
 
@@ -46,14 +45,14 @@ var b = {
 
 // SHELL
 BONUS_TYPES[0] = _.clone(bonus);
-BONUS_TYPES[0].run = function() {
-  b.shoot(this.playerIndex);
+BONUS_TYPES[0].run = function(index) {
+  b.shoot(index);
 };
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
 BONUS_TYPES[1].run = function() {
-  b.invincible(this.playerIndex);
+  b.invincible();
 };
 
 // BIG SHELL
