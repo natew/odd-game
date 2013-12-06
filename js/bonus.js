@@ -42,8 +42,7 @@ var b = {
     invincibleTimeout = setTimeout(function() {
       INVINCIBLE[index] = false;
       removeCloak();
-      console.log('UNINVINCIBLE')
-    }, 5000);
+    }, INVINCIBLE_DURATION);
 
     function removeCloak() {
       CARS[index].remove(cloak);
@@ -148,10 +147,11 @@ var i,
     bonusPositions,
     givePerTurn = 2;
 
-// A line of bonus indexes
+// A line of potential bonus positions
 for (i = 0; i < TOTAL_BONUSES; i++) {
-  xBonuses[i] = 25 - (i * (25 / TOTAL_BONUSES) * 2);
-  yBonuses[i] = 18 - (i * (18 / TOTAL_BONUSES) * 2);
+  xBonuses[i] = 23 - (i * (23 / TOTAL_BONUSES) * 2);
+  yBonuses[i] = 16 - (i * (16 / TOTAL_BONUSES) * 2);
+  // console.log(xBonuses[i], yBonuses[i])
 }
 
 // Shuffle them up
@@ -174,51 +174,53 @@ function giveBonuses() {
   // Get car positions as of meow
   var carPositions = _.map(CARS, function(car) { return car.position }),
       // Shuffle potential bonus spots
-      i, len = bonusPositions.length,
+      bonusLen = bonusPositions.length,
       bonusY = CARS[0].position.y,
-      given = 0;
+      given = 0,
+      numBonusToGive = Math.ceil(Math.random()*3) + 1,
+      i, j,
+      lastFoundAt = [0, 0];
 
-  // Loop through shuffled bonus positions
-  for (i = 0; i < len; i++) {
-    // Get bonus position
-    var bonusX = bonusPositions[i][0] * SCALE_X,
-        bonusZ = bonusPositions[i][1] * SCALE_Y;
+      console.log('give', numBonusToGive);
 
-        // console.log('checking bonus', bonusX, bonusZ);
+  // Loop through cars positions
+  for (i = 0; i < numBonusToGive; i++) {
+    var carIndex = i % NUM_CARS,
+        carPosX = carPositions[carIndex].x,
+        carPosZ = carPositions[carIndex].z;
 
-    // Loop through cars positions
-    var j, didntHit = [false, false];
-    for (j = 0; j < NUM_CARS; j++) {
-      var carPosX = carPositions[j].x,
-          carPosZ = carPositions[j].z;
+    // Loop through shuffled bonus positions
+    for (j = lastFoundAt[carIndex] + 1; j < bonusLen; j++) {
+      // Get bonus position
+      var bonusX = bonusPositions[j][0] * SCALE_X,
+          bonusZ = bonusPositions[j][1] * SCALE_Y,
+          distance = Math.sqrt(
+            Math.pow(carPosX - bonusX, 2) + Math.pow(carPosZ - bonusZ, 2)
+          );
 
-      // console.log(j, "" + carPosX + "/" + bonusX, "" + carPosZ + "/" + bonusZ);
-
-      var distance = Math.sqrt( Math.pow(carPosZ - bonusX, 2) + Math.pow(carPosZ - bonusZ, 2)  );
-      // console.log('dist', distance);
-
-      if (distance > 200) didntHit[j] = true;
-    }
-
-    if (didntHit[0] && didntHit[1]) {
-      // console.log('create bonus', bonusX, bonusZ);
-      var bonus = new THREE.Mesh( bonusGeometry, bonusMaterial );
-      bonus.rotation.z = 2;
-      bonus.rotation.y = 3;
-      bonus.rotation.x = 2;
-      bonus.position.set(bonusX, bonusY, bonusZ);
-      bonus.castShadow = true;
-      bonus.shadowDarkness = 1.0;
-      bonus.material.opacity = 1.0;
-      bonus.size = BONUS_SIZE;
-      // bonus.typeIndex = 4;
-      bonus.typeIndex = getBonusType();
-      WORLD.add(bonus);
-      BONUSES.push(bonus);
-
-      if (++given == givePerTurn) return;
+      // If not too far or close to player, place the bonus
+      if (distance > 80 && distance < 200) {
+        placeBonus(bonusX, bonusY, bonusZ);
+        lastFoundAt[carIndex] = j;
+        if (++given == numBonusToGive) return;
+        break;
+      }
     }
   }
+}
+
+function placeBonus(bonusX, bonusY, bonusZ) {
+  var bonus = new THREE.Mesh( bonusGeometry, bonusMaterial );
+  bonus.rotation.z = 2;
+  bonus.rotation.y = 3;
+  bonus.rotation.x = 2;
+  bonus.position.set(bonusX, bonusY, bonusZ);
+  bonus.material.opacity = 1.0;
+  bonus.size = BONUS_SIZE;
+  // bonus.typeIndex = 4;
+  bonus.typeIndex = getBonusType();
+  WORLD.add(bonus);
+  BONUSES.push(bonus);
 }
 
 function clearBonuses() {
@@ -261,7 +263,8 @@ function fadeBonus(delta) {
   // console.log(delta);
   for (var i = 0; i < BONUSES.length; i++) {
     var bonus = BONUSES[i];
-    bonus.material.opacity -= BONUS_DURATION * delta / 60000;
+    var less = BONUS_DURATION * delta / 120000;
+    bonus.material.opacity -= less;
   }
 }
 
