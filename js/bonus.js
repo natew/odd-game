@@ -1,5 +1,6 @@
 var bonus = {
-  run: function() {}
+  run: function() {},
+  rarity: 0
 };
 
 var invincibleTimeout;
@@ -7,6 +8,7 @@ var invincibleTimeout;
 // BONUSES
 var b = {
   shoot: function(index) {
+    console.log("shoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
     var shell = createShell(car, SHELL_SIZE, 0);
@@ -21,6 +23,7 @@ var b = {
   },
 
   invincible: function(index) {
+    console.log("invincible");
     INVINCIBLE[index] = true;
     clearTimeout(invincibleTimeout);
     invincibleTimeout = setTimeout(function() {
@@ -30,6 +33,7 @@ var b = {
   },
 
   bigShoot: function(index) {
+    console.log("bigShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
     var shell = createShell(car, BIG_SHELL_SIZE, 0);
@@ -43,9 +47,11 @@ var b = {
     NUM_SHELLS++;
   },
   triShoot: function(index) {
+    console.log("triShoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    for (var i = -Math.PI / 4; i <= Math.PI / 4; i += Math.PI / 4) {
+    var spread = Math.PI / 6;
+    for (var i = spread * -1; i <= spread; i += spread) {
       var shell = createShell(car, SHELL_SIZE, 0);
 
       shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
@@ -61,23 +67,27 @@ var b = {
 
 // SHELL
 BONUS_TYPES[0] = _.clone(bonus);
+BONUS_TYPES[0].rarity = 7;
 BONUS_TYPES[0].run = function(index) {
   b.shoot(index);
 };
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
+BONUS_TYPES[1].rarity = 3;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
 };
 
 // BIG SHELL
 BONUS_TYPES[2] = _.clone(bonus);
+BONUS_TYPES[2].rarity = 5;
 BONUS_TYPES[2].run = function(index) {
   b.bigShoot(index);
 }
 
 BONUS_TYPES[3] = _.clone(bonus);
+BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
 }
@@ -163,7 +173,7 @@ function giveBonuses() {
       bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
       // bonus.typeIndex = Math.floor(Math.random() * BONUS_TYPES.length) % BONUS_TYPES.length;
-      bonus.typeIndex = 3;
+      bonus.typeIndex = getBonusType();
       WORLD.add(bonus);
       BONUSES.push(bonus);
 
@@ -178,6 +188,20 @@ function clearBonuses() {
     WORLD.remove(bonus);
   });
   BONUSES = [];
+}
+
+function getBonusType() {
+  var currentPick = -1;
+  var highestProb = 0;
+  for (var i = 0; i < BONUS_TYPES.length; i++) {
+    var prob = Math.random() * BONUS_TYPES[i].rarity;
+    if (prob > highestProb) {
+      currentPick = i;
+      highestProb = prob;
+    }
+  }
+  console.log('pick: ', currentPick);
+  return currentPick;
 }
 
 function removeBonus(index) {
