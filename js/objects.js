@@ -95,9 +95,9 @@ function lighting() {
   // WORLD.add(light3);
 
   // // Point
-  // var light4 = new THREE.PointLight(0xffe849, 20, 300);
-  // light4.position.set(50, -100, -100);
-  // WORLD.add(light4);
+  var light4 = new THREE.PointLight(0xffe849, 3, 350);
+  light4.position.set(50, -100, -100);
+  WORLD.add(light4);
 }
 
 function createCars() {

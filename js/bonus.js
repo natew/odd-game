@@ -207,7 +207,7 @@ function giveBonuses() {
       bonusLen = bonusPositions.length,
       bonusY = CARS[0].position.y,
       given = 0,
-      numBonusToGive = Math.ceil(Math.random()*3) + 1,
+      numBonusToGive = Math.ceil(Math.random()*MAX_BONUS_PER_CYCLE)+1,
       i, j,
       lastFoundAt = [0, 0];
 
@@ -293,7 +293,7 @@ function fadeBonus(delta) {
   // console.log(delta);
   for (var i = 0; i < BONUSES.length; i++) {
     var bonus = BONUSES[i];
-    var less = BONUS_DURATION * delta / 120000;
+    var less = BONUS_DURATION * delta / 100000;
     bonus.material.opacity -= less;
   }
 }
