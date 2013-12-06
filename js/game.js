@@ -50,6 +50,23 @@ function createShell(car, shellSize, attributes) {
   return shell;
 }
 
+function createBanana(car, bananaSize) {
+  var bananaMaterial = new THREE.MeshLambertMaterial({ color: colors['banana'] }),
+      bananaGeometry = new THREE.CubeGeometry(bananaSize, bananaSize, bananaSize, 1, 1, 1);  
+
+  var banana = new THREE.Mesh(bananaGeometry, bananaMaterial),
+      carAngle = car.rotation.y + (Math.PI / 2),
+      bananaX = (80 + bananaSize / 2) * Math.sin(carAngle) * -1,
+      bananaZ = (80 + bananaSize / 2) * Math.cos(carAngle) * -1;
+
+  banana.position.set(car.position.x + bananaX, car.position.y, car.position.z + bananaZ);
+  banana.castShadow = true;
+  banana.shadowDarkness = 0.5;
+  banana.size = bananaSize;
+  WORLD.add(banana);
+  BANANAS.push(banana);
+}
+
 function moveCar() {
   var i, len = DATA.length;
 
@@ -138,6 +155,11 @@ function removeShell(index) {
   SHELLS.splice(index, 1);
   NUM_SHELLS--;
   seekBuffer = [];
+}
+
+function removeBanana(index) {
+  WORLD.remove(BANANAS[index]);
+  BANANAS.splice(index, 1);
 }
 
 function carExplode(index) {

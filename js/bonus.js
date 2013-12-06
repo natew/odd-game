@@ -1,5 +1,6 @@
 var bonus = {
   run: function() {},
+  object: null,
   rarity: 0
 };
 
@@ -109,6 +110,11 @@ var b = {
     shell.timeElapsed = 0;
     SHELLS.push(shell);
     NUM_SHELLS++;
+  },
+
+  dropBanana: function(index) {
+    var car = CARS[index];
+    var banana = createBanana(car, BANANA_SIZE);
   }
 };
 
@@ -122,6 +128,7 @@ BONUS_TYPES[0].run = function(index) {
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
 BONUS_TYPES[1].rarity = 3;
+BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
 };
@@ -150,6 +157,12 @@ BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.pulseShoot(index);
 };
+
+BONUS_TYPES[5] = _.clone(bonus);
+BONUS_TYPES[5].rarity = 7;
+BONUS_TYPES[5].run = function(index) {
+  b.dropBanana(index);
+}
 
 // Start placing them on the board
 function startBonuses() {
@@ -202,7 +215,7 @@ function giveBonuses() {
       i, j,
       lastFoundAt = [0, 0];
 
-      console.log('give', numBonusToGive);
+      // console.log('give', numBonusToGive);
 
   // Loop through cars positions
   for (i = 0; i < numBonusToGive; i++) {
@@ -290,7 +303,29 @@ function fadeBonus(delta) {
 }
 
 function givePlayerBonus(pIndex, bIndex) {
-  var bonusTypeIndex = BONUSES[bIndex].typeIndex;
-  PLAYER_BONUSES[pIndex].push(_.clone(BONUS_TYPES[bonusTypeIndex]));
+  var bonusTypeIndex = BONUSES[bIndex].typeIndex,
+      newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);
+
+  // If we want it to instantly activate the bonus
+  if (newBonus.instaGive) {
+    newBonus.run(pIndex);
+  }
+
+  // otherwise just push it onto their bonuses
+  else {
+    PLAYER_BONUSES[pIndex].push(newBonus);
+    showPlayerBonus(pIndex, newBonus);
+  }
+
   removeBonus(bIndex);
+}
+
+function showPlayerBonus(pIndex, bonus) {
+  var car = CARS[pIndex];
+
+  car.add(bonus);
+  console.log(bonus);
+  // bonus.position.x = 100;
+  // bonus.position.y = 100;
+  // bonus.position.z = 100;
 }
