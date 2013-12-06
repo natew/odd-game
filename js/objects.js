@@ -102,6 +102,7 @@ function createCars() {
     var car = new THREE.Mesh(
       new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),
       carMaterial );
+
     var half_screen = SCREEN_WIDTH / 2;
     car.position.set((half_screen * i) - (half_screen/2), 25, 0);
 
@@ -110,26 +111,34 @@ function createCars() {
     }
 
     car.index = i;
-    car.castShadow = true;
-    car.receiveShadow = true;
-    car.shadowDarkness = 0.5;
     WORLD.add(car);
     CARS.push(car);
+
+    // do this to load a model
+    loadObject("js/android.js", function (model) {
+      WORLD.add(model);
+    });
+
   }
 }
 
-function loadObjects() {
-  // var loader = new THREE.ObjectLoader;
-  // loader.load( "models/car.json", function ( geometry, materials ) {
-  //   var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000 } ) );
-  //   scene.add( mesh );
-  // });
+function loadObject( object, callback ) {
+  var jsonLoader = new THREE.JSONLoader();
 
-  // var loader = new THREE.ColladaLoader();
-  // loader.load('models/civic-red.dae', function (result) {
-  //   result.scene.dynamic = true;
-  //   result.scene.verticesNeedUpdate = true;
-  //   result.scene.normalsNeedUpdate = true;
-  //   scene.add(result.scene);
-  // });
+  jsonLoader.load(object, function (geo, mat) {
+      addModelToScene(geo, mat, function (ourModel) {
+        callback(ourModel);
+      });
+  });
+}
+
+function addModelToScene( geometry, materials, callback) 
+{
+  var material = new THREE.MeshFaceMaterial( materials );
+  model = new THREE.Mesh( geometry, material );
+  model.scale.set(10,10,10);
+  model.castShadow = true;
+  model.receiveShadow = true;
+  model.shadowDarkness = 0.5;
+  callback(model);
 }

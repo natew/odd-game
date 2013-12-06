@@ -48,7 +48,7 @@ function init() {
   createWalls();
   createCars();
   lighting();
-  loadObjects();
+  //loadObjects();
   startBonuses();
 }
 
