@@ -28,7 +28,7 @@ function playerAction(index) {
 // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
 //     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
-function createShell(car, shellSize, seeking) {
+function createShell(car, shellSize, attributes) {
   var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
       shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
   var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
@@ -44,7 +44,7 @@ function createShell(car, shellSize, seeking) {
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
   shell.size = shellSize;
-  shell.seeking = seeking;
+  shell.seeking = _.contains(attributes, "seeking");
   WORLD.add(shell);
   return shell;
 }
