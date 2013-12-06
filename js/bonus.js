@@ -94,6 +94,21 @@ var b = {
     shell.timeElapsed = 0;
     SHELLS.push(shell);
     NUM_SHELLS++;
+  },
+
+  pulseShoot: function(index) {
+    // console.log("shoot");
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    var shell = createShell(car, SHELL_SIZE, ["pulse"]);
+
+    shell.radians = (car.rotation.y) % (Math.PI * 2);
+    if (shell.radians < 0) shell.radians += Math.PI * 2;
+    // console.log(shell.radians * 180 / Math.PI);
+
+    shell.timeElapsed = 0;
+    SHELLS.push(shell);
+    NUM_SHELLS++;
   }
 };
 
@@ -116,19 +131,25 @@ BONUS_TYPES[2] = _.clone(bonus);
 BONUS_TYPES[2].rarity = 5;
 BONUS_TYPES[2].run = function(index) {
   b.bigShoot(index);
-}
+};
 
 BONUS_TYPES[3] = _.clone(bonus);
 BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
-}
+};
 
 BONUS_TYPES[4] = _.clone(bonus);
 BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
-}
+};
+
+BONUS_TYPES[4] = _.clone(bonus);
+BONUS_TYPES[4].rarity = 3;
+BONUS_TYPES[4].run = function(index) {
+  b.pulseShoot(index);
+};
 
 // Start placing them on the board
 function startBonuses() {
