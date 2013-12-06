@@ -1,5 +1,6 @@
 var bonus = {
   run: function() {},
+  object: null,
   rarity: 0
 };
 
