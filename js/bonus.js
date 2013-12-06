@@ -25,7 +25,8 @@ var b = {
     clearTimeout(invincibleTimeout);
     invincibleTimeout = setTimeout(function() {
       INVINCIBLE[index] = false;
-    }, 20000);
+      console.log('UNINVINCIBLE')
+    }, 5000);
   },
 
   bigShoot: function(index) {
@@ -45,7 +46,7 @@ var b = {
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
     for (var i = -Math.PI / 4; i <= Math.PI / 4; i += Math.PI / 4) {
-      var shell = createShell(car, BIG_SHELL_SIZE, 0);
+      var shell = createShell(car, SHELL_SIZE, 0);
 
       shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
       if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -66,18 +67,18 @@ BONUS_TYPES[0].run = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].run = function() {
-  b.invincible();
+BONUS_TYPES[1].run = function(index) {
+  b.invincible(index);
 };
 
 // BIG SHELL
 BONUS_TYPES[2] = _.clone(bonus);
-BONUS_TYPES[2].run = function() {
+BONUS_TYPES[2].run = function(index) {
   b.bigShoot(index);
 }
 
 BONUS_TYPES[3] = _.clone(bonus);
-BONUS_TYPES[3].run = function() {
+BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
 }
 
@@ -161,7 +162,8 @@ function giveBonuses() {
       bonus.shadowDarkness = 1.0;
       bonus.material.opacity = 1.0;
       bonus.size = BONUS_SIZE;
-      bonus.typeIndex = 2;
+      // bonus.typeIndex = Math.floor(Math.random() * BONUS_TYPES.length) % BONUS_TYPES.length;
+      bonus.typeIndex = 3;
       WORLD.add(bonus);
       BONUSES.push(bonus);
 

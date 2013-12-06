@@ -20,7 +20,7 @@ function moveBackward(car, moveDistance) {
 function playerAction(index) {
   if (!PLAYER_BONUSES[index].length) return;
   var bonus = PLAYER_BONUSES[index].shift();
-  console.log('do bonus', PLAYER_BONUSES[index])
+  console.log('do', bonus, index);
   bonus.run(index);
 }
 
