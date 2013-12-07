@@ -80,12 +80,12 @@ function collisionDetectBanana(index) {
     for (j = 0; j < NUM_CARS; j++) {
       var car_collisions = caster.intersectObject( CARS[j] );
 
-      if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[i]) {
+      if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[j]) {
         carExplode(j);
         removeBanana(index);
       }
     }
-  } 
+  }
 }
 // Walls
 //         0
@@ -122,6 +122,11 @@ function carCollideShell(obj, caster, shellIndex) {
     var car_collisions = caster.intersectObject( CARS[i] );
 
     if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[i]) {
+      //if its a shell attached to a car, remove that bonus from the player
+      if (!_.contains(SHELLS[shellIndex].attributes, "free")) {
+        PLAYER_BONUSES[SHELLS[shellIndex].fromCar].shift();
+        console.log('removing bonus', PLAYER_BONUSES[i]);
+      }
       carExplode(i);
       removeShell(shellIndex);
     }

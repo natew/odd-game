@@ -24,7 +24,7 @@ function keyEvents(moveDistance, rotateAngle) {
 
 // Shoot keycode
 $(window).keypress(function(e) {
-  console.log(e.keyCode);
+  // console.log(e.keyCode);
   if (e.keyCode == 32) { // space
     playerAction(0);
   }

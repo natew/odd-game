@@ -22,6 +22,10 @@ function playerAction(index) {
   var bonus = PLAYER_BONUSES[index].shift();
   // console.log('do', bonus, index);
   bonus.run(index);
+  if (PLAYER_BONUSES[index].length) {
+    console.log(PLAYER_BONUSES[index]);
+    PLAYER_BONUSES[index][0].pickUp(index);  
+  }
 }
 
 // 25 x, 18 y
@@ -43,10 +47,9 @@ function createShell(car, shellSize, attributes) {
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
-  shell.size = shellSize;
-  shell.seeking = _.contains(attributes, "seeking");
-  shell.pulse = _.contains(attributes, "pulse");
-  WORLD.add(shell);
+  shell.size = shellSize; //TODO: ADD PULSE IN CREATE SHELL
+  shell.attributes = attributes;
+  // WORLD.add(shell);
   return shell;
 }
 
@@ -83,73 +86,68 @@ function moveCar() {
 }
 
 function moveShells() {
-  if (NUM_SHELLS) {
+  if (SHELLS.length) {
     var i, shell, x, y;
-    for (i = 0; i < NUM_SHELLS; i++) {
+    for (i = 0; i < SHELLS.length; i++) {
       shell = SHELLS[i];
 
       collisionDetectShell(shell, i);
       moveShell(shell);
-
-      if (++shell.timeElapsed > SHELL_DURATION) {
-        removeShell(i);
+      if (_.contains(shell.attributes, "free")) {
+        if (++shell.timeElapsed > SHELL_DURATION) {
+          removeShell(i);
+        }
       }
     }
   }
 }
 var seekBuffer = [];
 function moveShell(shell) {
-  dist = SHELL_SPEED;
-  // console.log(shell.seeking);
-  if (shell.seeking) {
-    var toCarIndex = 1 - shell.fromCar;
-    var oppCar = CARS[toCarIndex];
-    var dY = oppCar.position.z - shell.position.z;
-    var dX = oppCar.position.x - shell.position.x;
-    if (seekBuffer.length < SEEKING_DIFFICULTY) {
-      seekBuffer.push(-1 * Math.atan2(dY, dX));
+  if (_.contains(shell.attributes, "free")) {
+    dist = SHELL_SPEED;
+    // console.log(shell.seeking);
+    if (_.contains(shell.attributes, "seeking")) {
+      var toCarIndex = 1 - shell.fromCar;  
+      var oppCar = CARS[toCarIndex];
+      var dY = oppCar.position.z - shell.position.z;
+      var dX = oppCar.position.x - shell.position.x;
+      if (seekBuffer.length < SEEKING_DIFFICULTY) {
+        seekBuffer.push(-1 * Math.atan2(dY, dX));
+      }
+      else {
+        shell.radians = seekBuffer.shift();
+        seekBuffer.push(-1 * Math.atan2(dY, dX));
+      }
     }
-    else {
-      shell.radians = seekBuffer.shift();
-      seekBuffer.push(-1 * Math.atan2(dY, dX));
+    else if (_.contains(shell.attributes, "pulse")) {
+      if (shell.timeElapsed % 10 === 0) {
+        var scale = 5 * Math.abs(Math.sin(shell.timeElapsed));
+        shell.scale.x = scale;
+        shell.scale.z = scale;
+        // this is hardcoded, I'll fix it later probably
+        shell.size = scale * SHELL_SIZE;
+      }
     }
-    // var distToOpp = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-    // var dTheta = (Math.atan2(dY, dX) * -1) - shell.radians;
-    // console.log(dTheta);
-    // if (Math.abs(dTheta) > 1) {
-    //   // console.log(shell.radians, (shell.radians + dTheta / 2), (-1 * Math.atan2(dY, dX)));
-    //   // shell.radians += dTheta / 2;
-    // }
-    // else {
-    //   shell.radians = -1 * Math.atan2(dY, dX);
+    x = dist * Math.cos(shell.radians);
+    y = (dist * Math.sin(shell.radians)) * -1;
 
-    // }
-    // shell.radians += (dTheta / 100) % (Math.PI * 2);
-    // console.log(distToOpp, dTheta);
+    shell.position.x += x;
+    shell.position.z += y;
   }
-
-  if (shell.pulse) {
-    if (shell.timeElapsed % 10 === 0) {
-      var scale = 5 * Math.abs(Math.sin(shell.timeElapsed));
-      shell.scale.x = scale;
-      shell.scale.z = scale;
-      // this is hardcoded, I'll fix it later probably
-      shell.size = scale * SHELL_SIZE;
-    }
+  else {
+    var car = CARS[shell.fromCar];
+    carAngle = car.rotation.y + (Math.PI / 2);
+    shell.position.x = car.position.x + (80 + shell.size / 2) * Math.sin(carAngle);
+    shell.position.z = car.position.z + (80 + shell.size / 2) * Math.cos(carAngle);
   }
-  x = dist * Math.cos(shell.radians);
-  y = (dist * Math.sin(shell.radians)) * -1;
-
-  shell.position.x += x;
-  shell.position.z += y;
 }
 
 function removeShell(index) {
   WORLD.remove(SHELLS[index]);
   // renderer.deallocateObject(SHELLS[index]);
   SHELLS.splice(index, 1);
-  NUM_SHELLS--;
   seekBuffer = [];
+  console.log('shells after remove', SHELLS.length);
 }
 
 function removeBanana(index) {
@@ -163,7 +161,7 @@ function carExplode(index) {
 
   SCORES[index]--;
   var player_score = SCORES[index];
-  console.log(player_score);
+  // console.log(player_score);
   updateScore(index, player_score);
 
   if (player_score == 0) {
