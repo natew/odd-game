@@ -28,6 +28,7 @@ var b = {
     shell.timeElapsed = 0;
     car.shell = null;
     
+    playSound('shoot');
   },
 
   invincible: function(index) {
@@ -68,6 +69,7 @@ var b = {
     shell.timeElapsed = 0;
     car.shell = null;
 
+    playSound('shoot');
   },
   triShoot: function(index) {
     var car = CARS[index];
@@ -91,6 +93,7 @@ var b = {
       WORLD.add(newShell);
       SHELLS.push(newShell);
      
+    playSound('shoot');
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -118,6 +121,7 @@ var b = {
     shell.timeElapsed = 0;
     car.shell = null;
 
+    playSound('shoot');
   },
   dropBanana: function(index) {
     var car = CARS[index];
@@ -425,6 +429,8 @@ function fadeBonus(delta) {
 
 function givePlayerBonus(pIndex, bIndex) {
   removeBonus(bIndex);
+
+  playSound('pickup', 'player_' + (pIndex + 1));
 
   var bonusTypeIndex = getBonusType(),
       newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);

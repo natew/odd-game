@@ -33,6 +33,9 @@ var sounds = {
         ],
         "banana": [
             "./assets/audio/mk64/mk64_item_drop.wav"
+        ],
+        "game_over" : [
+          "http://themushroomkingdom.net/sounds/wav/mk64/mk64_firstplace.wav"
         ]
     }
 };

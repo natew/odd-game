@@ -168,6 +168,7 @@ function carExplode(index) {
     showBanner("" + (1 - index + 1) + ' WINS!');
     GAME_OVER = true;
     clearInterval(BONUS_INTERVAL);
+    playSound('game_over');
   }
 }
 
