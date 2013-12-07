@@ -103,7 +103,6 @@ function moveShells() {
 }
 var seekBuffer = [];
 function moveShell(shell) {
-<<<<<<< HEAD
   if (_.contains(shell.attributes, "free")) {
     dist = SHELL_SPEED;
     // console.log(shell.seeking);
@@ -120,7 +119,7 @@ function moveShell(shell) {
         seekBuffer.push(-1 * Math.atan2(dY, dX));
       }
     }
-    else if (_.contains(shell.attributes, "pulse") {
+    else if (_.contains(shell.attributes, "pulse")) {
       if (shell.timeElapsed % 10 === 0) {
         var scale = 5 * Math.abs(Math.sin(shell.timeElapsed));
         shell.scale.x = scale;
