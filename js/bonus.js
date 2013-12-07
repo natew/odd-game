@@ -15,10 +15,10 @@ var b = {
     var shell = car.shell;
 
     if (shell.attributes) {
-      shell.attributes.push("free");       
+      shell.attributes.push("free");
     }
     else {
-      shell.attributes = ["free"];  
+      shell.attributes = ["free"];
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -27,8 +27,8 @@ var b = {
 
     shell.timeElapsed = 0;
     car.shell = null;
-    
     playSound('shoot');
+
   },
 
   invincible: function(index) {
@@ -56,10 +56,10 @@ var b = {
     var shell = car.shell;
 
     if (shell.attributes) {
-      shell.attributes.push("free");       
+      shell.attributes.push("free");
     }
     else {
-      shell.attributes = ["free"];  
+      shell.attributes = ["free"];
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -76,10 +76,10 @@ var b = {
     var shell = car.shell;
 
     if (shell.attributes) {
-      shell.attributes.push("free");       
+      shell.attributes.push("free");
     }
     else {
-      shell.attributes = ["free"];  
+      shell.attributes = ["free"];
     }
     var spread = Math.PI / 6;
     for (var i = spread * -1; i <= spread; i += spread * 2) {
@@ -92,8 +92,12 @@ var b = {
       newShell.timeElapsed = 0;
       WORLD.add(newShell);
       SHELLS.push(newShell);
+<<<<<<< HEAD
      
     playSound('shoot');
+=======
+
+>>>>>>> 2accd3193dd28898b60c55d55436fc8233ad15a4
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -108,10 +112,10 @@ var b = {
     var shell = car.shell;
 
     if (shell.attributes) {
-      shell.attributes.push("free");       
+      shell.attributes.push("free");
     }
     else {
-      shell.attributes = ["free"];  
+      shell.attributes = ["free"];
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -142,7 +146,7 @@ var pickUp = {
     car.shell = shell;
 
     SHELLS.push(shell);
-   
+
     console.log('shells after pickup', SHELLS.length);
   },
 
@@ -181,7 +185,7 @@ var pickUp = {
     car.shell = shell;
 
     SHELLS.push(shell);
-  
+
   },
   triShoot: function(index) {
     var car = CARS[index];
@@ -191,7 +195,7 @@ var pickUp = {
 
     car.shell = shell;
 
-    SHELLS.push(shell);  
+    SHELLS.push(shell);
   },
   seekingShoot: function(index) {
     var car = CARS[index];
@@ -201,7 +205,7 @@ var pickUp = {
     car.shell = shell;
 
     SHELLS.push(shell);
- 
+
   },
 
   pulseShoot: function(index) {
@@ -438,15 +442,16 @@ function givePlayerBonus(pIndex, bIndex) {
   newBonus.typeIndex = bonusTypeIndex;
 
   // If we want it to instantly activate the bonus
-  // if (newBonus.instaGive) {
-  //   newBonus.run(pIndex);
-  // }
-
-  // otherwise just push it onto their bonuses
-  if (PLAYER_BONUSES[pIndex].length == 0) {
-    newBonus.pickUp(pIndex);
-    // showPlayerBonus(pIndex, newBonus);
+  if (newBonus.instaGive) {
+    newBonus.run(pIndex);
   }
-  PLAYER_BONUSES[pIndex].push(newBonus);
+  else {
+    // otherwise just push it onto their bonuses
+    if (PLAYER_BONUSES[pIndex].length == 0) {
+      newBonus.pickUp(pIndex);
+      // showPlayerBonus(pIndex, newBonus);
+    }
+    PLAYER_BONUSES[pIndex].push(newBonus);
+  }
 
 }
