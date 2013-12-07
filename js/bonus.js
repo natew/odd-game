@@ -248,7 +248,7 @@ function placeBonus(bonusX, bonusY, bonusZ) {
   bonus.material.opacity = 1.0;
   bonus.size = BONUS_SIZE;
   // bonus.typeIndex = 4;
-  bonus.typeIndex = getBonusType();
+  // bonus.typeIndex = getBonusType();
   WORLD.add(bonus);
   BONUSES.push(bonus);
 }
@@ -266,6 +266,7 @@ function getBonusType() {
   var highestProb = 0;
   for (var i = 0; i < BONUS_TYPES.length; i++) {
     var prob = Math.random() * BONUS_TYPES[i].rarity;
+    // console.log('prob', i, prob);
     if (prob > highestProb) {
       currentPick = i;
       highestProb = prob;
@@ -299,8 +300,12 @@ function fadeBonus(delta) {
 }
 
 function givePlayerBonus(pIndex, bIndex) {
-  var bonusTypeIndex = BONUSES[bIndex].typeIndex,
+  removeBonus(bIndex);
+
+  var bonusTypeIndex = getBonusType(),
       newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);
+
+  newBonus.typeIndex = bonusTypeIndex;
 
   // If we want it to instantly activate the bonus
   if (newBonus.instaGive) {
@@ -312,15 +317,13 @@ function givePlayerBonus(pIndex, bIndex) {
     PLAYER_BONUSES[pIndex].push(newBonus);
     showPlayerBonus(pIndex, newBonus);
   }
-
-  removeBonus(bIndex);
 }
 
 function showPlayerBonus(pIndex, bonus) {
   var car = CARS[pIndex];
 
   car.add(bonus);
-  console.log(bonus);
+  // console.log(bonus);
   // bonus.position.x = 100;
   // bonus.position.y = 100;
   // bonus.position.z = 100;

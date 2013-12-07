@@ -85,7 +85,7 @@ function collisionDetectBanana(index) {
         removeBanana(index);
       }
     }
-  } 
+  }
 }
 // Walls
 //         0
