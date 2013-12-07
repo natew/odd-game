@@ -1,15 +1,23 @@
 var socket = io.connect('http://localhost:9001');
+var shoot = io.connect('http://localhost:9002');
+
 socket.on('message', function (data) {
   // console.log(data);
   setData(data);
+
+});
+
+shoot.on('message', function(data) {
+	console.log(data);
+  if (data.message.indexOf("green") != -1) {
+  	playerAction(0);
+  }
+  else if (data.message.indexOf("red") != -1) {
+  	playerAction(1);
+  }
 });
 
 function setData(data) {
-  DATA_PREV[data.id] = DATA;
-  DATA[data.id] = data;
+  DATA_PREV[data.carId] = DATA;
+  DATA[data.carId] = data;
 }
-
-var socket2 = io.connect('http://localhost:9002');
-socket2.on('message', function (data2) {
-  shoot();
-});
