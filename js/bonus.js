@@ -233,7 +233,7 @@ BONUS_TYPES[0].pickUp = function(index) {
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 5;
+BONUS_TYPES[1].rarity = 3;
 BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);

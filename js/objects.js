@@ -106,7 +106,7 @@ function createCars() {
     var carMaterial = new THREE.MeshPhongMaterial({
       color: i ? colors['car2'] : colors['car'],
       transparent: true,
-      opacity: 1.0
+      opacity: 0.2
     });
     var car = new THREE.Mesh(
       new THREE.CubeGeometry(CAR_SIZE + 20, CAR_SIZE, CAR_SIZE, 1, 1, 1),
@@ -121,7 +121,7 @@ function createCars() {
     car.index = i;
     car.castShadow = true;
     car.receiveShadow = true;
-    car.shadowDarkness = 0.5;
+    car.shadowDarkness = 1.0;
     WORLD.add(car);
     CARS.push(car);
   }

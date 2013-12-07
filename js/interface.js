@@ -28,13 +28,18 @@ function createScore(index, write) {
   // text3d.computeVertexNormals();
   var centerOffset = -0.5 * ( text3d.boundingBox.max.x - text3d.boundingBox.min.x );
 
-  var textMaterial = new THREE.MeshLambertMaterial( { color: 0xff36d5, overdraw: true } );
+  var textMaterial = new THREE.MeshLambertMaterial( {
+    color: 0xff36d5,
+    overdraw: true,
+    transparent: true,
+    opacity: 0.7
+  } );
   text = new THREE.Mesh( text3d, textMaterial );
 
   if (index == 0)
-    text.position.x = -230;
+    text.position.x = -170;
   else
-    text.position.x = 180;
+    text.position.x = 120;
 
   text.position.y = -120;
   text.position.z = -400;
