@@ -27,6 +27,7 @@ var b = {
 
     shell.timeElapsed = 0;
     car.shell = null;
+    playSound('shoot');
 
   },
 
@@ -68,6 +69,7 @@ var b = {
     shell.timeElapsed = 0;
     car.shell = null;
 
+    playSound('shoot');
   },
   triShoot: function(index) {
     var car = CARS[index];
@@ -90,7 +92,12 @@ var b = {
       newShell.timeElapsed = 0;
       WORLD.add(newShell);
       SHELLS.push(newShell);
+<<<<<<< HEAD
+     
+    playSound('shoot');
+=======
 
+>>>>>>> 2accd3193dd28898b60c55d55436fc8233ad15a4
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
@@ -118,6 +125,7 @@ var b = {
     shell.timeElapsed = 0;
     car.shell = null;
 
+    playSound('shoot');
   },
   dropBanana: function(index) {
     var car = CARS[index];
@@ -425,6 +433,8 @@ function fadeBonus(delta) {
 
 function givePlayerBonus(pIndex, bIndex) {
   removeBonus(bIndex);
+
+  playSound('pickup', 'player_' + (pIndex + 1));
 
   var bonusTypeIndex = getBonusType(),
       newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);
