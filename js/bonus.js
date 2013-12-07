@@ -112,14 +112,14 @@ var b = {
 
 // SHELL
 BONUS_TYPES[0] = _.clone(bonus);
-BONUS_TYPES[0].rarity = 7;
+BONUS_TYPES[0].rarity = 4;
 BONUS_TYPES[0].run = function(index) {
   b.shoot(index);
 };
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
-BONUS_TYPES[1].rarity = 50;
+BONUS_TYPES[1].rarity = 5;
 BONUS_TYPES[1].instaGive = true;
 BONUS_TYPES[1].run = function(index) {
   b.invincible(index);
@@ -155,7 +155,7 @@ BONUS_TYPES[4].run = function(index) {
 
 // Banana
 BONUS_TYPES[5] = _.clone(bonus);
-BONUS_TYPES[5].rarity = 50;
+BONUS_TYPES[5].rarity = 4;
 BONUS_TYPES[5].run = function(index) {
   b.dropBanana(index);
 }
