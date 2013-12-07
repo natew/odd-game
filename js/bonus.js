@@ -134,7 +134,7 @@ BONUS_TYPES[2].run = function(index) {
 
 // TRI SHOOT
 BONUS_TYPES[3] = _.clone(bonus);
-BONUS_TYPES[3].rarity = 40000;
+BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
 };
