@@ -174,6 +174,9 @@ function carExplode(index) {
 }
 
 function doIntro() {
+
+  playSound('count_down');
+
   showBanner('READY');
 
   setTimeout(function() {

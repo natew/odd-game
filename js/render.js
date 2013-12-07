@@ -54,7 +54,11 @@ function init() {
     startBonuses();
   }, DO_INTRO ? INTRO_LENGTH * 1000 + 1000 : 0);
 
-  if (DO_INTRO) doIntro();
+  if (DO_INTRO) {
+    setTimeout(function () {
+      doIntro();
+    }, 500);
+  }
 }
 
 function update() {
