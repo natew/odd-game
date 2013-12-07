@@ -33,9 +33,9 @@ function playerAction(index) {
 //     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
 function createShell(car, shellSize, attributes) {
-  var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
-      shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
-  var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
+  // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+  //     shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
+  var shell = OBJECTS['shell'].clone(),
       carAngle = car.rotation.y + (Math.PI / 2),
       shellX = (80 + shellSize / 2) * Math.sin(carAngle),
       shellZ = (80 + shellSize / 2) * Math.cos(carAngle);
@@ -47,24 +47,19 @@ function createShell(car, shellSize, attributes) {
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
   shell.shadowDarkness = 0.5;
-  shell.size = shellSize;
+  shell.size = shellSize; //TODO: ADD PULSE IN CREATE SHELL
   shell.attributes = attributes;
   // WORLD.add(shell);
   return shell;
 }
 
 function createBanana(car, bananaSize) {
-  var bananaMaterial = new THREE.MeshLambertMaterial({ color: colors['banana'] }),
-      bananaGeometry = new THREE.CubeGeometry(bananaSize, bananaSize, bananaSize, 1, 1, 1);  
-
-  var banana = new THREE.Mesh(bananaGeometry, bananaMaterial),
+  var banana = OBJECTS['banana'].clone(),
       carAngle = car.rotation.y + (Math.PI / 2),
       bananaX = (80 + bananaSize / 2) * Math.sin(carAngle) * -1,
       bananaZ = (80 + bananaSize / 2) * Math.cos(carAngle) * -1;
 
   banana.position.set(car.position.x + bananaX, car.position.y, car.position.z + bananaZ);
-  banana.castShadow = true;
-  banana.shadowDarkness = 0.5;
   banana.size = bananaSize;
   WORLD.add(banana);
   BANANAS.push(banana);
@@ -108,6 +103,7 @@ function moveShells() {
 }
 var seekBuffer = [];
 function moveShell(shell) {
+<<<<<<< HEAD
   if (_.contains(shell.attributes, "free")) {
     dist = SHELL_SPEED;
     // console.log(shell.seeking);
@@ -123,19 +119,15 @@ function moveShell(shell) {
         shell.radians = seekBuffer.shift();
         seekBuffer.push(-1 * Math.atan2(dY, dX));
       }
-      // var distToOpp = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
-      // var dTheta = (Math.atan2(dY, dX) * -1) - shell.radians;
-      // console.log(dTheta);
-      // if (Math.abs(dTheta) > 1) {
-      //   // console.log(shell.radians, (shell.radians + dTheta / 2), (-1 * Math.atan2(dY, dX)));
-      //   // shell.radians += dTheta / 2;
-      // }
-      // else {
-      //   shell.radians = -1 * Math.atan2(dY, dX); 
-        
-      // }
-      // shell.radians += (dTheta / 100) % (Math.PI * 2);
-      // console.log(distToOpp, dTheta);
+    }
+    else if (_.contains(shell.attributes, "pulse") {
+      if (shell.timeElapsed % 10 === 0) {
+        var scale = 5 * Math.abs(Math.sin(shell.timeElapsed));
+        shell.scale.x = scale;
+        shell.scale.z = scale;
+        // this is hardcoded, I'll fix it later probably
+        shell.size = scale * SHELL_SIZE;
+      }
     }
     x = dist * Math.cos(shell.radians);
     y = (dist * Math.sin(shell.radians)) * -1;
@@ -174,6 +166,24 @@ function carExplode(index) {
   updateScore(index, player_score);
 
   if (player_score == 0) {
-    alert('game over!!!!!!!');
+    showBanner("" + (1 - index + 1) + ' WINS!');
+    GAME_OVER = true;
+    clearInterval(BONUS_INTERVAL);
   }
+}
+
+function doIntro() {
+  showBanner('READY');
+
+  setTimeout(function() {
+    showBanner('SET');
+  }, 1000);
+
+  setTimeout(function() {
+    showBanner('GO!');
+  }, 2000);
+
+  setTimeout(function() {
+    removeBanner();
+  }, 3000);
 }
