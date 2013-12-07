@@ -80,7 +80,7 @@ function collisionDetectBanana(index) {
     for (j = 0; j < NUM_CARS; j++) {
       var car_collisions = caster.intersectObject( CARS[j] );
 
-      if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[i]) {
+      if (car_collisions.length && car_collisions[0].distance <= obj.size && !INVINCIBLE[j]) {
         carExplode(j);
         removeBanana(index);
       }
