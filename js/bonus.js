@@ -1,5 +1,6 @@
 var bonus = {
   run: function() {},
+  pickUp: function() {},
   object: null,
   rarity: 0
 };
@@ -10,18 +11,23 @@ var cloak;
 // BONUSES
 var b = {
   shoot: function(index) {
-    // console.log("shoot");
     var car = CARS[index];
-    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE);
+    var shell = car.shell;
 
-    shell.radians = (car.rotation.y) % (Math.PI * 2);
-    if (shell.radians < 0) shell.radians += Math.PI * 2;
-    // console.log(shell.radians * 180 / Math.PI);
+    if (shell.attributes) {
+      shell.attributes.push("free");       
+    }
+    else {
+      shell.attributes = ["free"];  
+    }
+
+    var newRadians = (car.rotation.y) % (Math.PI * 2);
+    if (newRadians < 0) newRadians += Math.PI * 2;
+    shell.radians = newRadians;
 
     shell.timeElapsed = 0;
-    SHELLS.push(shell);
-    NUM_SHELLS++;
+    car.shell = null;
+    
   },
 
   invincible: function(index) {
@@ -52,49 +58,154 @@ var b = {
   },
 
   bigShoot: function(index) {
-    // console.log("bigShoot");
-    var car = CARS[index];
-    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, BIG_SHELL_SIZE);
 
-    shell.radians = (car.rotation.y) % (Math.PI * 2);
-    if (shell.radians < 0) shell.radians += Math.PI * 2;
-    // console.log(shell.radians * 180 / Math.PI);
+    var car = CARS[index];
+    var shell = car.shell;
+
+    if (shell.attributes) {
+      shell.attributes.push("free");       
+    }
+    else {
+      shell.attributes = ["free"];  
+    }
+
+    var newRadians = (car.rotation.y) % (Math.PI * 2);
+    if (newRadians < 0) newRadians += Math.PI * 2;
+    shell.radians = newRadians;
 
     shell.timeElapsed = 0;
-    SHELLS.push(shell);
-    NUM_SHELLS++;
+    car.shell = null;
+
   },
   triShoot: function(index) {
-    // console.log("triShoot");
     var car = CARS[index];
-    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var spread = Math.PI / 6;
-    for (var i = spread * -1; i <= spread; i += spread) {
-      var shell = createShell(car, SHELL_SIZE);
+    var shell = car.shell;
 
-      shell.radians = (car.rotation.y) % (Math.PI * 2) + i;
-      if (shell.radians < 0) shell.radians += Math.PI * 2;
+    if (shell.attributes) {
+      shell.attributes.push("free");       
+    }
+    else {
+      shell.attributes = ["free"];  
+    }
+    var spread = Math.PI / 6;
+    for (var i = spread * -1; i <= spread; i += spread * 2) {
+      var newShell = createShell(car, SHELL_SIZE, ["free"]);
+
+      newShell.radians = (car.rotation.y) % (Math.PI * 2) + i;
+      if (newShell.radians < 0) newShell.radians += Math.PI * 2;
       // console.log(shell.radians * 180 / Math.PI);
 
-      shell.timeElapsed = 0;
-      SHELLS.push(shell);
-      NUM_SHELLS++;
+      newShell.timeElapsed = 0;
+      WORLD.add(newShell);
+      SHELLS.push(newShell);
+     
     }
+
+    var newRadians = (car.rotation.y) % (Math.PI * 2);
+    if (newRadians < 0) newRadians += Math.PI * 2;
+    shell.radians = newRadians;
+
+    // shell.timeElapsed = 0;
+    car.shell = null;
   },
   seekingShoot: function(index) {
-    // console.log("seekingShoot");
     var car = CARS[index];
-    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, ["seeking"]);
+    var shell = car.shell;
 
-    shell.radians = (car.rotation.y) % (Math.PI * 2);
-    if (shell.radians < 0) shell.radians += Math.PI * 2;
-    // console.log(shell.radians * 180 / Math.PI);
+    if (shell.attributes) {
+      shell.attributes.push("free");       
+    }
+    else {
+      shell.attributes = ["free"];  
+    }
+
+    var newRadians = (car.rotation.y) % (Math.PI * 2);
+    if (newRadians < 0) newRadians += Math.PI * 2;
+    shell.radians = newRadians;
 
     shell.timeElapsed = 0;
+    car.shell = null;
+
+  },
+  dropBanana: function(index) {
+    var car = CARS[index];
+    var banana = createBanana(car, BANANA_SIZE);
+    car.add(banana);
+    banana.position.z = -banana.size;
+  }
+};
+
+var pickUp = {
+  shoot: function(index) {
+    // console.log("pickUp shoot");
+
+    var car = CARS[index];
+    var shell = createShell(car, SHELL_SIZE);
+    WORLD.add(shell);
+
+    car.shell = shell;
+
     SHELLS.push(shell);
-    NUM_SHELLS++;
+   
+    console.log('shells after pickup', SHELLS.length);
+  },
+
+  invincible: function(index) {
+    // console.log("invincible");
+    INVINCIBLE[index] = true;
+
+    if (cloak) removeCloak();
+
+    cloak = new THREE.Mesh(
+      new THREE.SphereGeometry(60, 60, 60),
+      new THREE.MeshPhongMaterial({
+        transparent: true,
+        opacity: 0.3
+      })
+    );
+    CARS[index].add(cloak);
+
+    clearTimeout(invincibleTimeout);
+    invincibleTimeout = setTimeout(function() {
+      INVINCIBLE[index] = false;
+      removeCloak();
+    }, INVINCIBLE_DURATION);
+
+    function removeCloak() {
+      CARS[index].remove(cloak);
+      cloak = null;
+    }
+  },
+
+  bigShoot: function(index) {
+    var car = CARS[index];
+    var shell = createShell(car, BIG_SHELL_SIZE, []);
+    WORLD.add(shell);
+
+    car.shell = shell;
+
+    SHELLS.push(shell);
+  
+  },
+  triShoot: function(index) {
+    var car = CARS[index];
+    // for (var i = 0; i < 3; i++) {
+    var shell = createShell(car, SHELL_SIZE);
+    WORLD.add(shell);
+
+    car.shell = shell;
+
+    SHELLS.push(shell);  
+  },
+  seekingShoot: function(index) {
+    var car = CARS[index];
+    var shell = createShell(car, SHELL_SIZE, ["seeking"]);
+    WORLD.add(shell);
+
+    car.shell = shell;
+
+    SHELLS.push(shell);
+ 
   },
   dropBanana: function(index) {
     var car = CARS[index];
@@ -107,7 +218,10 @@ BONUS_TYPES[0] = _.clone(bonus);
 BONUS_TYPES[0].rarity = 7;
 BONUS_TYPES[0].run = function(index) {
   b.shoot(index);
-};
+}
+BONUS_TYPES[0].pickUp = function(index) {
+  pickUp.shoot(index);
+}
 
 // INVINCIBILITY
 BONUS_TYPES[1] = _.clone(bonus);
@@ -123,17 +237,26 @@ BONUS_TYPES[2].rarity = 5;
 BONUS_TYPES[2].run = function(index) {
   b.bigShoot(index);
 }
+BONUS_TYPES[2].pickUp = function(index) {
+  pickUp.bigShoot(index);
+}
 
 BONUS_TYPES[3] = _.clone(bonus);
 BONUS_TYPES[3].rarity = 4;
 BONUS_TYPES[3].run = function(index) {
   b.triShoot(index);
 }
+BONUS_TYPES[3].pickUp = function(index) {
+  pickUp.triShoot(index);
+}
 
 BONUS_TYPES[4] = _.clone(bonus);
 BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
+}
+BONUS_TYPES[4].pickUp = function(index) {
+  pickUp.seekingShoot(index);
 }
 
 BONUS_TYPES[5] = _.clone(bonus);
@@ -253,7 +376,6 @@ function getBonusType() {
       highestProb = prob;
     }
   }
-  // console.log('pick: ', currentPick);
   return currentPick;
 }
 
@@ -285,25 +407,26 @@ function givePlayerBonus(pIndex, bIndex) {
       newBonus = _.clone(BONUS_TYPES[bonusTypeIndex]);
 
   // If we want it to instantly activate the bonus
-  if (newBonus.instaGive) {
-    newBonus.run(pIndex);
-  }
+  // if (newBonus.instaGive) {
+  //   newBonus.run(pIndex);
+  // }
 
   // otherwise just push it onto their bonuses
-  else {
-    PLAYER_BONUSES[pIndex].push(newBonus);
-    showPlayerBonus(pIndex, newBonus);
+  if (PLAYER_BONUSES[pIndex].length == 0) {
+    newBonus.pickUp(pIndex);
+    // showPlayerBonus(pIndex, newBonus);
   }
+  PLAYER_BONUSES[pIndex].push(newBonus);
 
   removeBonus(bIndex);
 }
 
-function showPlayerBonus(pIndex, bonus) {
-  var car = CARS[pIndex];
+// function showPlayerBonus(pIndex, bonus) {
+//   var car = CARS[pIndex];
 
-  car.add(bonus);
-  console.log(bonus);
-  // bonus.position.x = 100;
-  // bonus.position.y = 100;
-  // bonus.position.z = 100;
-}
+//   car.add(bonus);
+//   console.log(bonus);
+//   // bonus.position.x = 100;
+//   // bonus.position.y = 100;
+//   // bonus.position.z = 100;
+// }
