@@ -86,7 +86,7 @@ function lighting() {
   camera.add(spotLight);
 
   // Hemisphere light
-  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 0.8);
+  var light2 = new THREE.HemisphereLight(colors['light'], colors['sky'], 0.6);
   WORLD.add(light2);
 
   // Point
@@ -127,18 +127,47 @@ function createCars() {
   }
 }
 
-function loadObjects() {
-  // var loader = new THREE.ObjectLoader;
-  // loader.load( "models/car.json", function ( geometry, materials ) {
-  //   var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0xff0000 } ) );
-  //   scene.add( mesh );
-  // });
+function loadObject(obj, material, callback) {
 
-  // var loader = new THREE.ColladaLoader();
-  // loader.load('models/civic-red.dae', function (result) {
-  //   result.scene.dynamic = true;
-  //   result.scene.verticesNeedUpdate = true;
-  //   result.scene.normalsNeedUpdate = true;
-  //   scene.add(result.scene);
-  // });
+  var manager = new THREE.LoadingManager();
+  manager.onProgress = function ( item, loaded, total ) {
+    // console.log( item, loaded, total );
+  };
+
+  var texture = new THREE.Texture();
+  var loader = new THREE.ImageLoader( manager );
+  loader.load(material, function ( image ) {
+    texture.image = image;
+    texture.needsUpdate = true;
+  } );
+
+  var loader = new THREE.OBJLoader( manager );
+  loader.load(obj, function ( object ) {
+    object.traverse( function ( child ) {
+      if ( child instanceof THREE.Mesh ) {
+        child.material.map = texture;
+      }
+    });
+
+    callback.call(this, object);
+  });
 }
+
+// BANANA
+var banana;
+loadObject('obj/dynamite.obj', 'obj/dynamite.png', function(obj) {
+  obj.position.y = 20;
+  obj.rotation.z = -200;
+  obj.scale.set(30, 30, 30);
+  OBJECTS['banana'] = obj;
+});
+
+
+// SHELL
+var shell;
+loadObject('obj/shell.obj', 'obj/green.jpg', function(obj) {
+  obj.position.y = 10;
+  obj.rotation.y = 0;
+  obj.scale.set(0.5, 0.5, 0.5);
+  OBJECTS['shell'] = obj;
+});

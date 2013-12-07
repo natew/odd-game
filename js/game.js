@@ -20,7 +20,7 @@ function moveBackward(car, moveDistance) {
 function playerAction(index) {
   if (!PLAYER_BONUSES[index].length) return;
   var bonus = PLAYER_BONUSES[index].shift();
-  console.log('do', bonus, index);
+  // console.log('do', bonus, index);
   bonus.run(index);
 }
 
@@ -29,9 +29,9 @@ function playerAction(index) {
 //     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
 function createShell(car, shellSize, attributes) {
-  var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
-      shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
-  var shell = new THREE.Mesh( shellGeometry, shellMaterial ),
+  // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
+  //     shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
+  var shell = OBJECTS['shell'].clone(),
       carAngle = car.rotation.y + (Math.PI / 2),
       shellX = (80 + shellSize / 2) * Math.sin(carAngle),
       shellZ = (80 + shellSize / 2) * Math.cos(carAngle);
@@ -51,17 +51,12 @@ function createShell(car, shellSize, attributes) {
 }
 
 function createBanana(car, bananaSize) {
-  var bananaMaterial = new THREE.MeshLambertMaterial({ color: colors['banana'] }),
-      bananaGeometry = new THREE.CubeGeometry(bananaSize, bananaSize, bananaSize, 1, 1, 1);
-
-  var banana = new THREE.Mesh(bananaGeometry, bananaMaterial),
+  var banana = OBJECTS['banana'].clone(),
       carAngle = car.rotation.y + (Math.PI / 2),
       bananaX = (80 + bananaSize / 2) * Math.sin(carAngle) * -1,
       bananaZ = (80 + bananaSize / 2) * Math.cos(carAngle) * -1;
 
   banana.position.set(car.position.x + bananaX, car.position.y, car.position.z + bananaZ);
-  banana.castShadow = true;
-  banana.shadowDarkness = 0.5;
   banana.size = bananaSize;
   WORLD.add(banana);
   BANANAS.push(banana);

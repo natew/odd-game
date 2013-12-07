@@ -48,7 +48,6 @@ function init() {
   createWalls();
   createCars();
   lighting();
-  loadObjects();
   initInterface();
 
   setTimeout(function() {
