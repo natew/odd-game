@@ -55,22 +55,17 @@ var b = {
     var car = CARS[index];
     var shell = car.shell;
 
-    if (shell.attributes) {
-      shell.attributes.push("free");
-    }
-    else {
-      shell.attributes = ["free"];
-    }
-
-    var shell = createShell(car, BIG_SHELL_SIZE, shell.attributes);
+    var newShell = createShell(car, BIG_SHELL_SIZE, shell.attributes);
+    newShell.attributes.push("free")
+    SHELLS[car.shellIndex] = newShell;
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
-    shell.radians = newRadians;
+    newShell.radians = newRadians;
 
-    shell.timeElapsed = 0;
-    WORLD.add(shell);
-    SHELLS.push(shell);
+    newShell.timeElapsed = 0;
+    WORLD.add(newShell);
+    WORLD.remove(shell);
     car.shell = null;
 
     playSound('shoot');
@@ -111,16 +106,7 @@ var b = {
   seekingShoot: function(index) {
     var car = CARS[index];
     var shell = car.shell;
-
-    if (shell.attributes) {
-      shell.attributes.push("free");
-      shell.attributes.push("seeking");
-    }
-    else {
-      shell.attributes = ["free", "seeking"];
-    }
-
-    shell = createShell(car, SHELL_SIZE, shell.attributes);
+    shell.attributes.push("free");
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
@@ -128,6 +114,7 @@ var b = {
 
     shell.timeElapsed = 0;
     WORLD.add(shell);
+    car.remove(shell);
     car.shell = null;
 
     playSound('shoot');
@@ -137,7 +124,7 @@ var b = {
     var car = CARS[index];
     var banana = createBanana(car, BANANA_SIZE);
     console.log('creating banana', banana);
-    banana.position.z = -banana.size;
+    // banana.position.z = -banana.size;
     WORLD.add(banana);
     // car.add(banana);
   },
@@ -206,6 +193,7 @@ var pickUp = {
     WORLD.add(shell);
 
     car.shell = shell;
+    car.shellIndex = SHELLS.length;
 
     SHELLS.push(shell);
 
@@ -244,8 +232,9 @@ var pickUp = {
     // console.log(shell.radians * 180 / Math.PI);
 
     shell.timeElapsed = 0;
+    car.shell = shell;
+    WORLD.add(shell);
     SHELLS.push(shell);
-    NUM_SHELLS++;
   },
 
   dropBanana: function(index) {
@@ -297,7 +286,7 @@ BONUS_TYPES[3].pickUp = function(index) {
 
 // Seeking shoot
 BONUS_TYPES[4] = _.clone(bonus);
-BONUS_TYPES[4].rarity = 3000;
+BONUS_TYPES[4].rarity = 3;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
 }
@@ -306,16 +295,16 @@ BONUS_TYPES[4].pickUp = function(index) {
 }
 
 // Pulse shoot
-BONUS_TYPES[4] = _.clone(bonus);
-BONUS_TYPES[4].rarity = 3;
-BONUS_TYPES[4].run = function(index) {
+BONUS_TYPES[5] = _.clone(bonus);
+BONUS_TYPES[5].rarity = 3;
+BONUS_TYPES[5].run = function(index) {
   b.pulseShoot(index);
 };
 
 // Banana
-BONUS_TYPES[5] = _.clone(bonus);
-BONUS_TYPES[5].rarity = 4;
-BONUS_TYPES[5].run = function(index) {
+BONUS_TYPES[6] = _.clone(bonus);
+BONUS_TYPES[6].rarity = 4;
+BONUS_TYPES[6].run = function(index) {
   b.dropBanana(index);
 }
 
