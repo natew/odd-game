@@ -258,6 +258,51 @@ var pickUp = {
 
 
 
+var shell_bonus = _.clone(bonus);
+shell_bonus.rarity = 4;
+shell_bonus.run = function (index) { b.shoot(index); };
+shell_bonus.pickUp = function(index) { pickUp.shoot(index); }
+BONUS_TYPES.push(shell_bonus);
+
+var triShoot_bonus = _.clone(bonus);
+triShoot_bonus.rarity = 4;
+triShoot_bonus.run = function (index) { b.triShoot(index); };
+triShoot_bonus.pickUp = function(index) { pickUp.triShoot(index); }
+BONUS_TYPES.push(triShoot_bonus);
+
+// Banana
+var banana_bonus = _.clone(bonus);
+banana_bonus.rarity = 4;
+banana_bonus.run = function(index) { b.dropBanana(index); }
+BONUS_TYPES.push(banana_bonus);
+
+var seekingShoot_bonus = _.clone(bonus);
+seekingShoot_bonus.rarity = 4;
+seekingShoot_bonus.run = function (index) { b.seekingShoot(index); };
+seekingShoot_bonus.pickUp = function(index) { pickUp.seekingShoot(index); }
+BONUS_TYPES.push(seekingShoot_bonus);
+
+// INVINCIBILITY
+var invinciblity = _.clone(bonus);
+invinciblity.rarity = 4;
+invinciblity.instaGive = true;
+invinciblity.run = function(index) { b.invincible(index); };
+BONUS_TYPES.push(invinciblity);
+
+ BIG SHELL
+var bigShell_bonus= _.clone(bonus);
+bigShell_bonus.rarity = 4;
+bigShell_bonus.run = function (index) { b.bigShoot(index); };
+bigShell_bonus.pickUp = function(index) { pickUp.bigShoot(index); }
+BONUS_TYPES.push(bigShell_bonus);
+
+ Pulse shoot
+BONUS_TYPES[0] = _.clone(bonus);
+BONUS_TYPES[0].rarity = 3;
+BONUS_TYPES[0].run = function(index) {
+  b.pulseShoot(index);
+};
+
 
 
 
