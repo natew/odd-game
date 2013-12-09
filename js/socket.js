@@ -10,10 +10,10 @@ socket.on('message', function (data) {
 shoot.on('message', function(data) {
 	// console.log(data);
   if (data.message.indexOf("green") != -1) {
-  	playerAction(1);
+  	playerAction(0);
   }
   else if (data.message.indexOf("red") != -1) {
-  	playerAction(0);
+  	playerAction(1);
   }
 });
 
