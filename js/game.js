@@ -18,6 +18,9 @@ function moveBackward(car, moveDistance) {
 }
 
 function playerAction(index) {
+  // restart game when user fires and game is over
+  if (GAME_OVER) { window.location.reload(); }
+
   if (!PLAYER_BONUSES[index].length) return;
   var bonus = PLAYER_BONUSES[index].shift();
   // console.log('do', bonus, index);
