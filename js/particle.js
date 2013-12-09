@@ -18,7 +18,7 @@ function createParticles(carIndex) {
     });
 
     var sprite = new THREE.Sprite( spriteMaterial );
-    sprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
+    sprite.scale.set( CAR_SIZE + 50, CAR_SIZE + 50, 1.0 ); // imageWidth, imageHeight
     sprite.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
     sprite.position.setLength( radiusRange * (Math.random() * 0.1 + 0.9) );
 
