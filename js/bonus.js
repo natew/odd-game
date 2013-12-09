@@ -55,7 +55,7 @@ var b = {
     var car = CARS[index];
     var shell = car.shell;
 
-    var newShell = createShell(car, BIG_SHELL_SIZE, shell.attributes);
+    var newShell = createShell(car, BIG_SHELL_SIZE, SHELL_COLOR_BIG, shell.attributes);
     newShell.attributes.push("free")
     SHELLS[car.shellIndex] = newShell;
 
@@ -83,7 +83,7 @@ var b = {
     }
     var spread = Math.PI / 6;
     for (var i = spread * -1; i <= spread; i += spread * 2) {
-      var newShell = createShell(car, SHELL_SIZE, ["free"]);
+      var newShell = createShell(car, SHELL_SIZE, SHELL_COLOR_TRI, ["free"]);
 
       newShell.radians = (car.rotation.y) % (Math.PI * 2) + i;
       if (newShell.radians < 0) newShell.radians += Math.PI * 2;
@@ -135,7 +135,7 @@ var b = {
     // console.log("shoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, ["pulse"]);
+    var shell = createShell(car, SHELL_SIZE, SHELL_COLOR_PULSE, ["pulse"]);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -143,7 +143,6 @@ var b = {
 
     shell.timeElapsed = 0;
     SHELLS.push(shell);
-    NUM_SHELLS++;
   },
 };
 
@@ -152,7 +151,7 @@ var pickUp = {
     // console.log("pickUp shoot");
 
     var car = CARS[index];
-    var shell = createShell(car, SHELL_SIZE);
+    var shell = createShell(car, SHELL_SIZE, SHELL_COLOR);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -191,7 +190,7 @@ var pickUp = {
 
   bigShoot: function(index) {
     var car = CARS[index];
-    var shell = createShell(car, BIG_SHELL_SIZE / 2.5, []);
+    var shell = createShell(car, BIG_SHELL_SIZE / 2.5, SHELL_COLOR_BIG, []);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -204,7 +203,7 @@ var pickUp = {
   triShoot: function(index) {
     var car = CARS[index];
     // for (var i = 0; i < 3; i++) {
-    var shell = createShell(car, SHELL_SIZE);
+    var shell = createShell(car, SHELL_SIZE, SHELL_COLOR_TRI);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -214,7 +213,7 @@ var pickUp = {
 
   seekingShoot: function(index) {
     var car = CARS[index];
-    var shell = createShell(car, SHELL_SIZE, ["seeking"]);
+    var shell = createShell(car, SHELL_SIZE, SHELL_COLOR_SEEKING, ["seeking"]);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -227,7 +226,7 @@ var pickUp = {
     // console.log("shoot");
     var car = CARS[index];
     // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
-    var shell = createShell(car, SHELL_SIZE, ["pulse"]);
+    var shell = createShell(car, SHELL_SIZE, SHELL_COLOR_PULSE, ["pulse"]);
 
     shell.radians = (car.rotation.y) % (Math.PI * 2);
     if (shell.radians < 0) shell.radians += Math.PI * 2;
@@ -253,7 +252,7 @@ shell_bonus.run = function (index) { b.shoot(index); };
 shell_bonus.pickUp = function(index) { pickUp.shoot(index); }
 BONUS_TYPES.push(shell_bonus);
 
-// SEEKING SHOOT
+// tri SHOOT
 var triShoot_bonus = _.clone(bonus);
 triShoot_bonus.rarity = 4;
 triShoot_bonus.run = function (index) { b.triShoot(index); };
@@ -281,7 +280,7 @@ invinciblity.run = function(index) { b.invincible(index); };
 BONUS_TYPES.push(invinciblity);
 
 // BIG SHELL
-var bigShell_bonus= _.clone(bonus);
+var bigShell_bonus = _.clone(bonus);
 bigShell_bonus.rarity = 4;
 bigShell_bonus.run = function (index) { b.bigShoot(index); };
 bigShell_bonus.pickUp = function(index) { pickUp.bigShoot(index); }

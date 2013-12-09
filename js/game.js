@@ -35,10 +35,10 @@ function playerAction(index) {
 // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
 //     shellGeometry = new THREE.CubeGeometry(SHELL_SIZE, SHELL_SIZE, SHELL_SIZE, 1, 1, 1);
 
-function createShell(car, shellSize, attributes) {
+function createShell(car, shellSize, shellColor, attributes) {
   // var shellMaterial = new THREE.MeshLambertMaterial({ color: colors['shell'] }),
   //     shellGeometry = new THREE.CubeGeometry(shellSize, shellSize, shellSize, 1, 1, 1);
-  var shell = OBJECTS['shell'].clone(),
+  var shell = OBJECTS['shell_' + shellColor].clone(),
       carAngle = car.rotation.y + (Math.PI / 2),
       shellX = (80 + shellSize / 2) * Math.sin(carAngle),
       shellZ = (80 + shellSize / 2) * Math.cos(carAngle);

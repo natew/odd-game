@@ -162,12 +162,38 @@ loadObject('obj/dynamite.obj', 'obj/dynamite.png', function(obj) {
   OBJECTS['banana'] = obj;
 });
 
-
 // SHELL
 var shell;
 loadObject('obj/shell.obj', 'obj/green.jpg', function(obj) {
   obj.position.y = 10;
   obj.rotation.y = 0;
   obj.scale.set(0.5, 0.5, 0.5);
-  OBJECTS['shell'] = obj;
+  OBJECTS['shell_green'] = obj;
+});
+
+// SHELL
+var shell;
+loadObject('obj/shell.obj', 'obj/blue.jpg', function(obj) {
+  obj.position.y = 10;
+  obj.rotation.y = 0;
+  obj.scale.set(0.5, 0.5, 0.5);
+  OBJECTS['shell_blue'] = obj;
+});
+
+// SHELL
+var shell;
+loadObject('obj/shell.obj', 'obj/yellow.jpg', function(obj) {
+  obj.position.y = 10;
+  obj.rotation.y = 0;
+  obj.scale.set(0.5, 0.5, 0.5);
+  OBJECTS['shell_yellow'] = obj;
+});
+
+// SHELL
+var shell;
+loadObject('obj/shell.obj', 'obj/red.jpg', function(obj) {
+  obj.position.y = 10;
+  obj.rotation.y = 0;
+  obj.scale.set(0.5, 0.5, 0.5);
+  OBJECTS['shell_red'] = obj;
 });

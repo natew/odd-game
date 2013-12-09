@@ -28,6 +28,13 @@ var SCREEN_WIDTH, SCREEN_HEIGHT,
     BONUS_INTERVAL,
     MAX_BONUS_PER_CYCLE = 4;
 
+// shell colors
+var SHELL_COLOR = 'green',
+    SHELL_COLOR_BIG = 'blue',
+    SHELL_COLOR_TRI = 'yellow',
+    SHELL_COLOR_SEEKING = 'red',
+    SHELL_COLOR_PULSE = 'green';
+
 // Game items
 var WALLS = [],
     WALL_INDEX = {},
