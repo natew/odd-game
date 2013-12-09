@@ -141,7 +141,6 @@ var b = {
 
     shell.timeElapsed = 0;
     SHELLS.push(shell);
-    NUM_SHELLS++;
   },
 };
 
