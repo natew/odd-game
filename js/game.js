@@ -46,8 +46,13 @@ function createShell(car, shellSize, attributes) {
   // shell.geometry.verticesNeedUpdate = true;
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
-  shell.shadowDarkness = 0.5;
+  // shell.shadowDarkness = 0.5;
   shell.size = shellSize; //TODO: ADD PULSE IN CREATE SHELL
+
+  shell.scale.x = shell.scale.x * shellSize * .05;
+  shell.scale.y = shell.scale.y * shellSize * .05;
+  shell.scale.z = shell.scale.z * shellSize * .05;
+
   shell.attributes = attributes;
   // WORLD.add(shell);
   return shell;

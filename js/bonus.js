@@ -62,15 +62,20 @@ var b = {
       shell.attributes = ["free"];
     }
 
+    var shell = createShell(car, BIG_SHELL_SIZE, shell.attributes);
+
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
     shell.radians = newRadians;
 
     shell.timeElapsed = 0;
+    WORLD.add(shell);
+    SHELLS.push(shell);
     car.shell = null;
 
     playSound('shoot');
   },
+
   triShoot: function(index) {
     var car = CARS[index];
     var shell = car.shell;
@@ -102,26 +107,32 @@ var b = {
     // shell.timeElapsed = 0;
     car.shell = null;
   },
+
   seekingShoot: function(index) {
     var car = CARS[index];
     var shell = car.shell;
 
     if (shell.attributes) {
       shell.attributes.push("free");
+      shell.attributes.push("seeking");
     }
     else {
-      shell.attributes = ["free"];
+      shell.attributes = ["free", "seeking"];
     }
+
+    shell = createShell(car, SHELL_SIZE, shell.attributes);
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
     shell.radians = newRadians;
 
     shell.timeElapsed = 0;
+    WORLD.add(shell);
     car.shell = null;
 
     playSound('shoot');
   },
+
   dropBanana: function(index) {
     var car = CARS[index];
     var banana = createBanana(car, BANANA_SIZE);
@@ -191,7 +202,7 @@ var pickUp = {
 
   bigShoot: function(index) {
     var car = CARS[index];
-    var shell = createShell(car, BIG_SHELL_SIZE, []);
+    var shell = createShell(car, BIG_SHELL_SIZE / 2.5, []);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -199,6 +210,7 @@ var pickUp = {
     SHELLS.push(shell);
 
   },
+
   triShoot: function(index) {
     var car = CARS[index];
     // for (var i = 0; i < 3; i++) {
@@ -209,6 +221,7 @@ var pickUp = {
 
     SHELLS.push(shell);
   },
+
   seekingShoot: function(index) {
     var car = CARS[index];
     var shell = createShell(car, SHELL_SIZE, ["seeking"]);
@@ -263,6 +276,7 @@ BONUS_TYPES[1].run = function(index) {
 BONUS_TYPES[2] = _.clone(bonus);
 BONUS_TYPES[2].rarity = 5;
 BONUS_TYPES[2].run = function(index) {
+  console.log('big shoot')
   b.bigShoot(index);
 }
 BONUS_TYPES[2].pickUp = function(index) {
@@ -283,7 +297,7 @@ BONUS_TYPES[3].pickUp = function(index) {
 
 // Seeking shoot
 BONUS_TYPES[4] = _.clone(bonus);
-BONUS_TYPES[4].rarity = 3;
+BONUS_TYPES[4].rarity = 3000;
 BONUS_TYPES[4].run = function(index) {
   b.seekingShoot(index);
 }
