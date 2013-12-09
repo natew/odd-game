@@ -127,6 +127,7 @@ function carCollideShell(obj, caster, shellIndex) {
         PLAYER_BONUSES[SHELLS[shellIndex].fromCar].shift();
         console.log('removing bonus', PLAYER_BONUSES[i]);
       }
+      playSound('got_shot', i);
       carExplode(i);
       removeShell(shellIndex);
     }
