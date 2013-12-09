@@ -62,15 +62,20 @@ var b = {
       shell.attributes = ["free"];
     }
 
+    var shell = createShell(car, BIG_SHELL_SIZE, shell.attributes);
+
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
     shell.radians = newRadians;
 
     shell.timeElapsed = 0;
+    WORLD.add(shell);
+    SHELLS.push(shell);
     car.shell = null;
 
     playSound('shoot');
   },
+
   triShoot: function(index) {
     var car = CARS[index];
     var shell = car.shell;
@@ -102,32 +107,57 @@ var b = {
     // shell.timeElapsed = 0;
     car.shell = null;
   },
+
   seekingShoot: function(index) {
     var car = CARS[index];
     var shell = car.shell;
 
     if (shell.attributes) {
       shell.attributes.push("free");
+      shell.attributes.push("seeking");
     }
     else {
-      shell.attributes = ["free"];
+      shell.attributes = ["free", "seeking"];
     }
+
+    shell = createShell(car, SHELL_SIZE, shell.attributes);
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
     if (newRadians < 0) newRadians += Math.PI * 2;
     shell.radians = newRadians;
 
     shell.timeElapsed = 0;
+    WORLD.add(shell);
     car.shell = null;
 
     playSound('shoot');
   },
+
   dropBanana: function(index) {
     var car = CARS[index];
     var banana = createBanana(car, BANANA_SIZE);
     car.add(banana);
     if (banana.position) banana.position.z = -banana.size;
-  }
+    console.log('creating banana', banana);
+    banana.position.z = -banana.size;
+    WORLD.add(banana);
+    // car.add(banana);
+  },
+
+  pulseShoot: function(index) {
+    // console.log("shoot");
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    var shell = createShell(car, SHELL_SIZE, ["pulse"]);
+
+    shell.radians = (car.rotation.y) % (Math.PI * 2);
+    if (shell.radians < 0) shell.radians += Math.PI * 2;
+    // console.log(shell.radians * 180 / Math.PI);
+
+    shell.timeElapsed = 0;
+    SHELLS.push(shell);
+    NUM_SHELLS++;
+  },
 };
 
 var pickUp = {
@@ -174,7 +204,7 @@ var pickUp = {
 
   bigShoot: function(index) {
     var car = CARS[index];
-    var shell = createShell(car, BIG_SHELL_SIZE, []);
+    var shell = createShell(car, BIG_SHELL_SIZE / 2.5, []);
     WORLD.add(shell);
 
     car.shell = shell;
@@ -182,6 +212,7 @@ var pickUp = {
     SHELLS.push(shell);
 
   },
+
   triShoot: function(index) {
     var car = CARS[index];
     // for (var i = 0; i < 3; i++) {
@@ -192,6 +223,7 @@ var pickUp = {
 
     SHELLS.push(shell);
   },
+
   seekingShoot: function(index) {
     var car = CARS[index];
     var shell = createShell(car, SHELL_SIZE, ["seeking"]);
@@ -224,50 +256,10 @@ var pickUp = {
   }
 };
 
-var shell_bonus = _.clone(bonus);
-shell_bonus.rarity = 4;
-shell_bonus.run = function (index) { b.shoot(index); };
-shell_bonus.pickUp = function(index) { pickUp.shoot(index); }
-BONUS_TYPES.push(shell_bonus);
 
-var triShoot_bonus = _.clone(bonus);
-triShoot_bonus.rarity = 4;
-triShoot_bonus.run = function (index) { b.triShoot(index); };
-triShoot_bonus.pickUp = function(index) { pickUp.triShoot(index); }
-BONUS_TYPES.push(triShoot_bonus);
 
-// Banana
-var banana_bonus = _.clone(bonus);
-banana_bonus.rarity = 4;
-banana_bonus.run = function(index) { b.dropBanana(index); }
-BONUS_TYPES.push(banana_bonus);
 
-var seekingShoot_bonus = _.clone(bonus);
-seekingShoot_bonus.rarity = 4;
-seekingShoot_bonus.run = function (index) { b.seekingShoot(index); };
-seekingShoot_bonus.pickUp = function(index) { pickUp.seekingShoot(index); }
-BONUS_TYPES.push(seekingShoot_bonus);
 
-// INVINCIBILITY
-var invinciblity = _.clone(bonus);
-invinciblity.rarity = 4;
-invinciblity.instaGive = true;
-invinciblity.run = function(index) { b.invincible(index); };
-BONUS_TYPES.push(invinciblity);
-
-// BIG SHELL
-//var bigShell_bonus= _.clone(bonus);
-//bigShell_bonus.rarity = 4;
-//bigShell_bonus.run = function (index) { b.bigShoot(index); };
-//bigShell_bonus.pickUp = function(index) { pickUp.bigShoot(index); }
-//BONUS_TYPES.push(bigShell_bonus);
-
-// Pulse shoot
-//BONUS_TYPES[0] = _.clone(bonus);
-//BONUS_TYPES[0].rarity = 3;
-//BONUS_TYPES[0].run = function(index) {
-  //b.pulseShoot(index);
-//};
 
 // Start placing them on the board
 function startBonuses() {

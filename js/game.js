@@ -27,7 +27,7 @@ function playerAction(index) {
   bonus.run(index);
   if (PLAYER_BONUSES[index].length) {
     console.log(PLAYER_BONUSES[index]);
-    PLAYER_BONUSES[index][0].pickUp(index);  
+    PLAYER_BONUSES[index][0].pickUp(index);
   }
 }
 
@@ -49,8 +49,13 @@ function createShell(car, shellSize, attributes) {
   // shell.geometry.verticesNeedUpdate = true;
   // shell.geometry.normalsNeedUpdate = true;
   shell.castShadow = true;
-  shell.shadowDarkness = 0.5;
+  // shell.shadowDarkness = 0.5;
   shell.size = shellSize; //TODO: ADD PULSE IN CREATE SHELL
+
+  shell.scale.x = shell.scale.x * shellSize * .05;
+  shell.scale.y = shell.scale.y * shellSize * .05;
+  shell.scale.z = shell.scale.z * shellSize * .05;
+
   shell.attributes = attributes;
   // WORLD.add(shell);
   return shell;
@@ -64,8 +69,8 @@ function createBanana(car, bananaSize) {
 
   banana.position.set(car.position.x + bananaX, car.position.y, car.position.z + bananaZ);
   banana.size = bananaSize;
-  WORLD.add(banana);
   BANANAS.push(banana);
+  return banana;
 }
 
 function moveCar() {
@@ -110,7 +115,7 @@ function moveShell(shell) {
     dist = SHELL_SPEED;
     // console.log(shell.seeking);
     if (_.contains(shell.attributes, "seeking")) {
-      var toCarIndex = 1 - shell.fromCar;  
+      var toCarIndex = 1 - shell.fromCar;
       var oppCar = CARS[toCarIndex];
       var dY = oppCar.position.z - shell.position.z;
       var dX = oppCar.position.x - shell.position.x;

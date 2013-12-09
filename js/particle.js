@@ -5,7 +5,7 @@ var particleGroup = [],
 
 function createParticles(carIndex) {
   var totalParticles = 20;
-  var radiusRange = 50;
+  var radiusRange = CAR_SIZE;
 
   particleAttributes[carIndex] = { startSize: [], startPosition: [], randomness: [] };
   particleGroup[carIndex] = new THREE.Object3D();
