@@ -92,12 +92,7 @@ var b = {
       newShell.timeElapsed = 0;
       WORLD.add(newShell);
       SHELLS.push(newShell);
-<<<<<<< HEAD
-     
-    playSound('shoot');
-=======
-
->>>>>>> 2accd3193dd28898b60c55d55436fc8233ad15a4
+      playSound('shoot');
     }
 
     var newRadians = (car.rotation.y) % (Math.PI * 2);
