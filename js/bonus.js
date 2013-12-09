@@ -125,9 +125,26 @@ var b = {
   dropBanana: function(index) {
     var car = CARS[index];
     var banana = createBanana(car, BANANA_SIZE);
-    car.add(banana);
+    console.log('creating banana', banana);
     banana.position.z = -banana.size;
-  }
+    WORLD.add(banana);
+    // car.add(banana);
+  },
+
+  pulseShoot: function(index) {
+    // console.log("shoot");
+    var car = CARS[index];
+    // var degree = Math.abs(car.rotation.y * 180 / Math.PI) % 360;
+    var shell = createShell(car, SHELL_SIZE, ["pulse"]);
+
+    shell.radians = (car.rotation.y) % (Math.PI * 2);
+    if (shell.radians < 0) shell.radians += Math.PI * 2;
+    // console.log(shell.radians * 180 / Math.PI);
+
+    shell.timeElapsed = 0;
+    SHELLS.push(shell);
+    NUM_SHELLS++;
+  },
 };
 
 var pickUp = {
